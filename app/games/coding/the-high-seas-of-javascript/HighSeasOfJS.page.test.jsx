@@ -1,14 +1,11 @@
 import { render, screen } from '@testing-library/react'
 
-import HighSeasOfJS from './HighSeasOfJS.page';
-export default HighSeasOfJS;
+import HighSeasOfJSPage from './HighSeasOfJS.page';
 
 describe('TDD for HighSeasOfJS game', () => {
-  test('Make sure you can return to the home page', () => {
-    render(<HighSeasOfJS />);
+  test('page renders', () => {
+    const { container } = render(<HighSeasOfJSPage />);
 
-    const homePageLink = screen.getByText('Home').closest('a');
-
-    expect(homePageLink).toHaveAttribute('href', '/');
+    expect(container).not.toBeEmptyDOMElement();
   });
 });

@@ -64,14 +64,16 @@ TODO: create a Contributing.md guide.
 
 ## TODO:s
 
-* [ ] Init/Hello World
+* [x] Init/Hello World
   * [x] Create a bare bones unstyled home page and pirate words page
   * [x] Add a test for pirate words page to make sure my testing frameworks/tools are up and running properly
-  * [ ] Then figure out what's next
+  * [x] Then figure out what's next
 * [ ] Choose license (and contributing guide or no)
 * [ ] Decide to start in TypeScript or stay with Vanilla JavaScript for now
 * [ ] Create first two games
 * [ ] Create home page with game navigation
+* [ ] Update favicons
+* [ ] Update headers (powered by, etc)
 
 **Ideas**
 

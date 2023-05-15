@@ -1,2 +1,7 @@
-import HighSeasOfJS from './HighSeasOfJS.page';
+import HighSeasOfJS, { metadata } from './HighSeasOfJS.page';
+
+export {
+  metadata,
+};
+
 export default HighSeasOfJS;
