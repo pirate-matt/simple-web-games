@@ -24,6 +24,8 @@ We'll likely create multiple variations of what is essentially the same game, so
 * [ ] Guess the Word
   * [ ] [PirateWords](./PirateWords.md) – Can you guess the captain's favorite word before you walk the plank?
   * [ ] DogWords – Can you guess the recall word before the dog runs off? Don't ask me why your friend choose to use that word when training the dog. They're _your_ friend!
+* [ ] Coding Games
+  * [ ] [The High Seas of JavaScript](./TheHighSeasOfJS.md) – a text-based adventure teaching basic concepts
 
 **Future Ideation**
 
@@ -31,6 +33,10 @@ We'll likely create multiple variations of what is essentially the same game, so
 * Math
   * Something with bytes, bits, or maybe hexadecimal
   * Make 24 or some other number
+* Coding Games
+  * Flash cards / Find the pirate treasure by answering trivia questions from guardians along the path
+  * Algorithmic Art – write code, have CSS do magic
+  * Escape the VIM monster – teach basic vim keybindings
 
 ## Frameworks, tools, technologies selected
 
