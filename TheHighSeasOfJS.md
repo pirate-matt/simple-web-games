@@ -18,6 +18,12 @@ _A text-based adventure on the high seas of JavaScript teaching basic concepts._
       * [Code.org's Hello World!](https://code.org/helloworld)
       * [You Don't Know JS](https://github.com/getify/You-Dont-Know-JS)
   * Chapter 1: Gearing up for your voyage; the basics
+    * Vocabulary:
+      * variables, loops
+      * Client, Server
+    * Introduction to scope and why it's important you know how it works
+    * Browser based JavaScript & window magics VS Node
+  * Chapter 2: Exploring an uncharted Ocean with TDD
 * **FUTURE**
   * The High Seas of TypeScript
 
