@@ -18,5 +18,20 @@ _Can you guess the captain's favorite word before you walk the plank?_
 ## TODO:s
 
 * [ ] v0.0 hard coded word
+  * [ ] progress section
+    * [x] exists
+  * [ ] letter guess section
+    * [x] exists
+    * [ ] user can guess all letters
+  * [ ] user can guess correct letter
+  * [ ] user can guess incorrect letter
+  * [x] hardcode starting word
+    * [ ] dynamically pick starting word
+      * [ ] bias against completed words
+  * [ ] win check
+  * [ ] lose check
+  * [ ] enter name section
+  * ? Add compound words (with spaces?)
+* [ ]
 
 ## Next Steps

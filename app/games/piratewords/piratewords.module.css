@@ -1,0 +1,19 @@
+.guessable-letter, .unguessed-letter {
+  height: 3em;
+  width: 6em;
+  margin: 4px;
+}
+
+.guessable-letter {
+  font-family: monospace;
+  text-transform: uppercase;
+}
+
+.unguessed-letter {
+  border-bottom: solid 1px black;
+  display: inline-block;
+}
+
+.footer {
+  margin-top: 2em;
+}

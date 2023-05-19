@@ -1,15 +1,7 @@
-import Link from 'next/link';
+import PirateWordsPage, { metadata } from './PirateWords.page';
 
-export default function Page() {
-  return (
-    <main>
-      <h1>Pirate Words</h1>
-      <p>
-        TODO: build pirate words!
-      </p>
-      <div>
-        Take me <Link href="/">Home</Link>!
-      </div>
-    </main>
-  )
+export {
+  metadata,
 }
+
+export default PirateWordsPage;
