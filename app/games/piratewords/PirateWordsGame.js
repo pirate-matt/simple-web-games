@@ -21,19 +21,22 @@ const GAME_STATUSES = {
 
 export default function PirateWordsGame({ startingWord = 'hello' }) {
   const wordToFind = startingWord.toUpperCase();
+  const lettersToGuess = wordToFind.split('');
+  const numUniqueLettersToFind = (new Set(lettersToGuess)).size;
+
   const [guessedLetters, setGuessedLetters] = useState('');
   const [numGuessesLeft, setNumGuessesLeft] = useState(calculateStartingGuesses());
   const [foundLetters, setFoundLetters] = useState('');
   const [gameStatus, setGameStatus] = useState(GAME_STATUSES.playing);
 
-  const lettersToGuess = wordToFind.split('');
-  const uniqueLettersToGuess = new Set(lettersToGuess);
-
   useEffect(() => {
     if (numGuessesLeft <= 0) {
       setGameStatus(GAME_STATUSES.loss);
     }
-  }, [numGuessesLeft, setGameStatus]);
+    else if (foundLetters.length === numUniqueLettersToFind) {
+      setGameStatus(GAME_STATUSES.won);
+    }
+  }, [numGuessesLeft, foundLetters, setGameStatus, numUniqueLettersToFind]);
 
 
   const handleGuess = (clickEvent) => {
@@ -95,26 +98,6 @@ export default function PirateWordsGame({ startingWord = 'hello' }) {
         })}
       </div>
       {{
-       [GAME_STATUSES.loss]: (
-          <div>
-            <h2
-              role="alert"
-              aria-label="game over: loss"
-            >
-              Game Over
-            </h2>
-            <p>
-              Uh oh, you ran out of plank to walk 😢.
-            </p>
-            <p>
-              {`You missed the Captain's favorite word by ${wordToFind.length - foundLetters.length} letters.`}
-            </p>
-            <hr />
-            <div>
-              Would you like to <Link href="/games/piratewords" onClick={handleRestart}>restart your adventure on the high seas</Link>?
-            </div>
-          </div>
-        ),
         [GAME_STATUSES.playing]: (
           <div
             aria-label="Guessable Letters"
@@ -133,6 +116,43 @@ export default function PirateWordsGame({ startingWord = 'hello' }) {
                 {guessableLetter}
               </button>
             ))}
+          </div>
+        ),
+        [GAME_STATUSES.won]: (
+          <div>
+            <h2
+              role="alert"
+              aria-label="game over: win"
+            >
+              Congratulations!
+            </h2>
+            <p>
+              {`You correctly guessed the Captain's favorite word, <em>${wordToFind.toLowerCase()}</em>, with ${numGuessesLeft} guess${numGuessesLeft > 1 ? 'es' : ''} to spare!`}
+            </p>
+            <p>
+              The crew helps you off the plank, would you like <Link href="/games/piratewords" onClick={handleRestart}>continue your adventure with another game</Link>?
+            </p>
+            <hr />
+          </div>
+        ),
+        [GAME_STATUSES.loss]: (
+          <div>
+            <h2
+              role="alert"
+              aria-label="game over: loss"
+            >
+              Game Over
+            </h2>
+            <p>
+              Uh oh, you ran out of plank to walk 😢.
+            </p>
+            <p>
+              {`You missed the Captain's favorite word by ${wordToFind.length - foundLetters.length} letters.`}
+            </p>
+            <hr />
+            <p>
+              Would you like to <Link href="/games/piratewords" onClick={handleRestart}>restart your adventure on the high seas</Link>?
+            </p>
           </div>
         ),
       }[gameStatus]}

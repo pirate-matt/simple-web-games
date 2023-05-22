@@ -37,7 +37,7 @@ _Can you guess the captain's favorite word before you walk the plank?_
 * [x] user can guess incorrect letter
 * [x] hardcode starting word
   * [ ] dynamically pick starting word
-* [ ] win check
+* [x] win check
 * [x] lose check
 * [ ] view local player stats
   * [ ] export local player stats

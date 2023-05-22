@@ -105,4 +105,24 @@ describe('TDD for PirateWordsGame', () => {
 
     // TODO: assert that new game can actually be played... holding off because I think adding player name + stats will remove this assert anyways
   });
+
+  test('when user correctly guesses word left they win and are able to play again if they want', async () => {
+    const expectedWord = 'pirate';
+    const uniqueCorrectLetters = new Set(expectedWord.split(''));
+
+    render(<PirateWordsGame startingWord={expectedWord} />);
+
+    await Promise.all(Array.from(uniqueCorrectLetters).map(async (letterToGuess) => {
+      const buttonForLetter = screen.getByRole('button', { name: new RegExp(letterToGuess, 'i') });
+      await userEvent.click(buttonForLetter);
+    }));
+
+    const lossNotification = screen.getByRole('alert', { name: 'game over: win' });
+    expect(lossNotification).toBeInTheDocument();
+
+    const restartGameBtn = screen.getByRole('link', { name: /continue .* with another game/i})
+    expect(restartGameBtn).toBeInTheDocument();
+
+    // TODO: assert that new game can actually be played... holding off because I think adding player name + stats will remove this assert anyways
+  });
 });
