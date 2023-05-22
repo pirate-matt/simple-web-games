@@ -21,6 +21,7 @@ _Can you guess the captain's favorite word before you walk the plank?_
 * [ ] v0.1 can play with randomized word and win or lose
 * [ ] v0.2 can enter player name and view local scores by name
 * [ ] v0.3 add pirate themed "story telling" elements to UX
+* [ ] v0.4 add difficulty into game (categories?, word selection, guesses left, etc.)
 * [ ] v1.0 ???
 * Future Ideas
   * Handle compound words
@@ -37,7 +38,7 @@ _Can you guess the captain's favorite word before you walk the plank?_
 * [x] hardcode starting word
   * [ ] dynamically pick starting word
 * [ ] win check
-* [ ] lose check
+* [x] lose check
 * [ ] view local player stats
   * [ ] export local player stats
   * [ ] import local player stats

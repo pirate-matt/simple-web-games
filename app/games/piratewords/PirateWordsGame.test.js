@@ -4,10 +4,12 @@ import { within } from '@testing-library/dom';
 
 import PirateWordsGame from './PirateWordsGame.js';
 
+const alphabetAsString = 'abcdefghijklmnopqrstuvwxyz';
+
 describe('TDD for PirateWordsGame', () => {
   test('`Make sure user can see how many guesses they have left at the start of the game', () => {
     const expectedWord = 'Arrrrrrrrrg';
-    const expectedNumLettersToGuess = expectedWord.length;
+    const expectedNumLettersToGuess = 6; // Note: this is currently hardcoded, future versions of the game will likely make this dynamic
 
     render(<PirateWordsGame startingWord={expectedWord} />);
 
@@ -31,16 +33,16 @@ describe('TDD for PirateWordsGame', () => {
     expect(lettersToGuess.length).toBe(expectedNumLettersToGuess);
   });
 
-  test.each('abcdefghijklmnopqrstuvwxyz'.split(''))('make sure user is able to click on each letter: %p to guess', (letterToGuess) => {
-    render(<PirateWordsGame />);
+  test.each(alphabetAsString.split(''))('make sure user is able to click on each letter: %p to guess', async (letterToGuess) => {
+    render(<PirateWordsGame startingWord={alphabetAsString}/>);
 
     const buttonForLetter = screen.getByRole('button', { name: new RegExp(letterToGuess, 'i')});
 
-    userEvent.click(buttonForLetter);
-
     expect(buttonForLetter).toBeInTheDocument();
 
-    // TODO: should I be asserting anything here?
+    await userEvent.click(buttonForLetter);
+
+    // TODO: should I assert anything here?
   });
 
   test('when user guesses incorrect letter, letter is disabled and progress towards loss increases', async () => {
@@ -72,16 +74,35 @@ describe('TDD for PirateWordsGame', () => {
     await userEvent.click(eButton);
 
     expect(eButton).toHaveAttribute('disabled'); // cannot guess letter again
-    expect(progressIndicator.textContent).toBe(expectedGuessesLeft);
+    expect(progressIndicator.textContent).toBe(expectedGuessesLeft); // number of guesses left hasn't changed
 
     const guessSection = screen.getByRole('status', { name: 'correct letters and blank un-guessed letters' });
     const lettersLeftToGuess = within(guessSection).getAllByLabelText('un-guessed letter');
     const lettersFound = within(guessSection).getAllByLabelText('found letter: e');
 
-    expect(lettersFound.length).toBe(expectedNumEFounds);
+    expect(lettersFound.length).toBe(expectedNumEFounds); // found 2 "e"s
     lettersFound.forEach((letterFound) => {
       expect(letterFound.textContent.toUpperCase()).toBe('E');
     });
-    expect(lettersLeftToGuess.length).toBe(expectedNumUnfound);
+    expect(lettersLeftToGuess.length).toBe(expectedNumUnfound); // still showing the other unguessed letters
+  });
+
+  test('when user runs out of guesses left they lose and are able to restart', async () => {
+
+    render(<PirateWordsGame startingWord="z" />);
+
+    // Note: currently game is hardcoded to allow 6 guesses, if this is made smart, these guesses may need to be updated
+    await Promise.all('abcdef'.split('').map(async (letterToGuess) => {
+      const buttonForLetter = screen.getByRole('button', { name: new RegExp(letterToGuess, 'i') });
+      await userEvent.click(buttonForLetter);
+    }));
+
+    const lossNotification = screen.getByRole('alert', { name: 'game over: loss' });
+    expect(lossNotification).toBeInTheDocument();
+
+    const restartGameBtn = screen.getByRole('link', { name: /restart/i})
+    expect(restartGameBtn).toBeInTheDocument();
+
+    // TODO: assert that new game can actually be played... holding off because I think adding player name + stats will remove this assert anyways
   });
 });
