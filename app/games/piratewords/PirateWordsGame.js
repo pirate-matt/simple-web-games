@@ -7,18 +7,26 @@ import styles from './piratewords.module.css';
 const guessableLetters = `abcdefghijklmnopqrstuvwxyz`.toUpperCase().split('');
 
 export default function PirateWordsGame({ startingWord = 'hello' }) {
+  const wordToFind = startingWord.toUpperCase();
   const [guessedLetters, setGuessedLetters] = useState('');
   const [numGuessesLeft, setNumGuessesLeft] = useState(startingWord.length);
+  const [foundLetters, setFoundLetters] = useState('');
 
-  const lettersToGuess = startingWord.split('');
+  const lettersToGuess = startingWord.toUpperCase().split('');
 
   const handleGuess = (clickEvent) => {
     const letterButton = clickEvent.currentTarget;
-    const letterGuessed = letterButton.dataset.letter;
-    setGuessedLetters((curState) => curState + letterGuessed.toUpperCase());
+    const letterGuessed = letterButton.dataset.letter.toUpperCase();
+    setGuessedLetters((curState) => curState + letterGuessed);
 
-    // TODO: don't decrement on correct guesses
-    setNumGuessesLeft((curVal) => curVal - 1);
+    if(wordToFind.includes(letterGuessed)) {
+      setFoundLetters(curState => curState + letterGuessed);
+      // TODO: check for win?
+    }
+    else {
+      setNumGuessesLeft((curVal) => curVal - 1);
+      // TODO: check for loss?
+    }
   };
 
 
@@ -37,18 +45,32 @@ export default function PirateWordsGame({ startingWord = 'hello' }) {
       <div
         role="status"
         aria-label="correct letters and blank un-guessed letters"
+        className={styles['letters-to-guess']}
       >
-        {lettersToGuess.map((letterToGuess, index) => (
-          <div
-            key={`letter-to-guess--${index}`}
-            aria-label="un-guessed letter"
-            className={styles['unguessed-letter']}
-          >
-          </div>
-        ))}
+        {lettersToGuess.map((letterToGuess, index) => {
+          if (foundLetters.includes(letterToGuess)) return (
+            <div
+              key={`letter-to-guess--${index}`}
+              aria-label={`found letter: ${letterToGuess.toLowerCase()}`}
+              className={styles['letter-to-guess']}
+            >
+              {letterToGuess}
+            </div>
+          );
+
+          return (
+            <div
+              key={`letter-to-guess--${index}`}
+              aria-label="un-guessed letter"
+              className={styles['letter-to-guess']}
+            >
+            </div>
+          )
+        })}
       </div>
       <div
         aria-label="Guessable Letters"
+        className={styles['guessable-letters']}
       >
         {guessableLetters.map((guessableLetter) => (
           <button

@@ -54,8 +54,34 @@ describe('TDD for PirateWordsGame', () => {
 
     await userEvent.click(wButton);
 
-
     expect(wButton).toHaveAttribute('disabled'); // cannot guess letter again
     expect(progressIndicator.textContent).toBe(expectedGuessesLeft.toString());
+  });
+
+  test('when user guesses correct letter, letter is disabled and all instances of letter are revealed', async () => {
+    const expectedWord = 'Greetings';  // greetings has two "e"s, we should find both
+    const expectedNumEFounds = 2;
+    const expectedNumUnfound = expectedWord.length - expectedNumEFounds;
+
+    render(<PirateWordsGame startingWord={expectedWord} />);
+
+    const eButton = screen.getByRole('button', { name: /e/i });
+    const progressIndicator = screen.getByRole('status', { name: /guesses left/i });
+    const expectedGuessesLeft = progressIndicator.textContent;
+
+    await userEvent.click(eButton);
+
+    expect(eButton).toHaveAttribute('disabled'); // cannot guess letter again
+    expect(progressIndicator.textContent).toBe(expectedGuessesLeft);
+
+    const guessSection = screen.getByRole('status', { name: 'correct letters and blank un-guessed letters' });
+    const lettersLeftToGuess = within(guessSection).getAllByLabelText('un-guessed letter');
+    const lettersFound = within(guessSection).getAllByLabelText('found letter: e');
+
+    expect(lettersFound.length).toBe(expectedNumEFounds);
+    lettersFound.forEach((letterFound) => {
+      expect(letterFound.textContent.toUpperCase()).toBe('E');
+    });
+    expect(lettersLeftToGuess.length).toBe(expectedNumUnfound);
   });
 });

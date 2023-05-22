@@ -1,17 +1,35 @@
-.guessable-letter, .unguessed-letter {
-  height: 3em;
-  width: 6em;
+
+.letters-to-guess {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 1em 0;
+}
+
+.letter-to-guess {
+  border-bottom: solid 2px black;
+  display: inline-block;
+  font-size: 32px;
+  text-align: center;
+}
+
+.letter-to-guess, .guessable-letter {
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: 42px;
+  width: 42px;
   margin: 4px;
+}
+
+.guessable-letters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .guessable-letter {
   font-family: monospace;
   text-transform: uppercase;
-}
-
-.unguessed-letter {
-  border-bottom: solid 1px black;
-  display: inline-block;
 }
 
 .footer {

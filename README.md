@@ -66,6 +66,7 @@ TODO: create a Contributing.md guide.
 * [ ] Decide to start in TypeScript or stay with Vanilla JavaScript for now
 * [ ] Create first two games
 * [ ] Create home page with game navigation
+* [ ] Add linter
 
 **Ideas**
 

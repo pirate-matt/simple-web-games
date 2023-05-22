@@ -17,21 +17,29 @@ _Can you guess the captain's favorite word before you walk the plank?_
 
 ## TODO:s
 
-* [ ] v0.0 hard coded word
-  * [ ] progress section
-    * [x] exists
-  * [ ] letter guess section
-    * [x] exists
-    * [ ] user can guess all letters
-  * [ ] user can guess correct letter
-  * [ ] user can guess incorrect letter
-  * [x] hardcode starting word
-    * [ ] dynamically pick starting word
-      * [ ] bias against completed words
-  * [ ] win check
-  * [ ] lose check
-  * [ ] enter name section
-  * ? Add compound words (with spaces?)
-* [ ]
+* [ ] v0.0 can play with hard coded word and win or lose
+* [ ] v0.1 can play with randomized word and win or lose
+* [ ] v0.2 can enter player name and view local scores by name
+* [ ] v0.3 add pirate themed "story telling" elements to UX
+* [ ] v1.0 ???
+* Future Ideas
+  * Handle compound words
+  * bias random word selection looking at completed and missed words
+  * find word api to randomize words every deploy
+
+* [ ] enter player name
+* [ ] progress section
+  * [x] exists
+  * [ ] uses graphics in addition to numbers
+* [x] user can guess all letters
+* [x] user can guess correct letter
+* [x] user can guess incorrect letter
+* [x] hardcode starting word
+  * [ ] dynamically pick starting word
+* [ ] win check
+* [ ] lose check
+* [ ] view local player stats
+  * [ ] export local player stats
+  * [ ] import local player stats
 
 ## Next Steps
