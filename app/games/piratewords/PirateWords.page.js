@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import GameController from './GameController';
 import PirateWordsGame from './PirateWordsGame';
 
 import styles from './piratewords.module.css';
@@ -14,7 +15,7 @@ export default function Page() {
       <main>
         <h1>Pirate Words</h1>
 
-        <PirateWordsGame />
+        <GameController Game={PirateWordsGame} />
       </main>
       <footer className={styles.footer}>
         Take me <Link href="/">Home</Link>!

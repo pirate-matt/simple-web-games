@@ -19,7 +19,11 @@ const GAME_STATUSES = {
   loss: 'LOSS',
 };
 
-export default function PirateWordsGame({ startingWord = 'hello' }) {
+export default function PirateWordsGame({
+  startingWord = 'hello',
+  renderGameOver = false,
+  endGameData = {}
+}) {
   const wordToFind = startingWord.toUpperCase();
   const lettersToGuess = wordToFind.split('');
   const numUniqueLettersToFind = (new Set(lettersToGuess)).size;
@@ -58,8 +62,7 @@ export default function PirateWordsGame({ startingWord = 'hello' }) {
     window.location.href = "/games/piratewords";
   };
 
-
-  return (
+  if (!renderGameOver) return (
     <>
       <div>
         <label id="guesses-left-label" htmlFor="guesses-left">Guesses Left:</label>
@@ -97,65 +100,69 @@ export default function PirateWordsGame({ startingWord = 'hello' }) {
           )
         })}
       </div>
-      {{
-        [GAME_STATUSES.playing]: (
-          <div
-            aria-label="Guessable Letters"
-            className={styles['guessable-letters']}
+      <div
+        aria-label="Guessable Letters"
+        className={styles['guessable-letters']}
+      >
+        {guessableLetters.map((guessableLetter) => (
+          <button
+            key={`guessable-letter--${guessableLetter}`}
+            data-letter={guessableLetter}
+            className={styles['guessable-letter']}
+            onClick={handleGuess}
+            {...guessedLetters.includes(guessableLetter.toUpperCase()) ? {
+              disabled: true,
+            } : undefined}
           >
-            {guessableLetters.map((guessableLetter) => (
-              <button
-                key={`guessable-letter--${guessableLetter}`}
-                data-letter={guessableLetter}
-                className={styles['guessable-letter']}
-                onClick={handleGuess}
-                {...guessedLetters.includes(guessableLetter.toUpperCase()) ? {
-                  disabled: true,
-                } : undefined}
-              >
-                {guessableLetter}
-              </button>
-            ))}
-          </div>
-        ),
-        [GAME_STATUSES.won]: (
-          <div>
-            <h2
-              role="alert"
-              aria-label="game over: win"
-            >
-              Congratulations!
-            </h2>
-            <p>
-              {`You correctly guessed the Captain's favorite word, <em>${wordToFind.toLowerCase()}</em>, with ${numGuessesLeft} guess${numGuessesLeft > 1 ? 'es' : ''} to spare!`}
-            </p>
-            <p>
-              The crew helps you off the plank, would you like <Link href="/games/piratewords" onClick={handleRestart}>continue your adventure with another game</Link>?
-            </p>
-            <hr />
-          </div>
-        ),
-        [GAME_STATUSES.loss]: (
-          <div>
-            <h2
-              role="alert"
-              aria-label="game over: loss"
-            >
-              Game Over
-            </h2>
-            <p>
-              Uh oh, you ran out of plank to walk 😢.
-            </p>
-            <p>
-              {`You missed the Captain's favorite word by ${wordToFind.length - foundLetters.length} letters.`}
-            </p>
-            <hr />
-            <p>
-              Would you like to <Link href="/games/piratewords" onClick={handleRestart}>restart your adventure on the high seas</Link>?
-            </p>
-          </div>
-        ),
-      }[gameStatus]}
+            {guessableLetter}
+          </button>
+        ))}
+      </div>
+    </>
+  );
+
+  if (endGameData.won === true) return (
+    <>
+      <div>
+        <h2
+          role="alert"
+          aria-label="game over: win"
+        >
+          Congratulations!
+        </h2>
+        <p>
+          {`You correctly guessed the Captain's favorite word, <em>${wordToFind.toLowerCase()}</em>, with ${numGuessesLeft} guess${numGuessesLeft > 1 ? 'es' : ''} to spare!`}
+        </p>
+        <p>
+          The crew helps you off the plank, would you like <Link href="/games/piratewords" onClick={handleRestart}>continue your adventure with another game</Link>?
+        </p>
+        <hr />
+      </div>
+    </>
+  );
+
+
+  // default assume endGameData.loss === true
+  return (
+    <>
+      <div>
+        <h2
+          role="alert"
+          aria-label="game over: loss"
+        >
+          Game Over
+        </h2>
+        <p>
+          Uh oh, you ran out of plank to walk 😢.
+        </p>
+        <p>
+          {`You missed the Captain's favorite word by ${wordToFind.length - foundLetters.length} letters.`}
+        </p>
+        <hr />
+        <p>
+          Would you like to <Link href="/games/piratewords" onClick={handleRestart}>restart your adventure on the high seas</Link>?
+        </p>
+      </div>
     </>
   );
 }

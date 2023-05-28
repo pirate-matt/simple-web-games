@@ -7,7 +7,7 @@ import PirateWordsGame from './PirateWordsGame.js';
 const alphabetAsString = 'abcdefghijklmnopqrstuvwxyz';
 
 describe('TDD for PirateWordsGame', () => {
-  test('`Make sure user can see how many guesses they have left at the start of the game', () => {
+  test('Make sure user can see how many guesses they have left at the start of the game', () => {
     const expectedWord = 'Arrrrrrrrrg';
     const expectedNumLettersToGuess = 6; // Note: this is currently hardcoded, future versions of the game will likely make this dynamic
 
@@ -87,9 +87,10 @@ describe('TDD for PirateWordsGame', () => {
     expect(lettersLeftToGuess.length).toBe(expectedNumUnfound); // still showing the other unguessed letters
   });
 
-  test('when user runs out of guesses left they lose and are able to restart', async () => {
+  test('when user runs out of guesses left the game ends', async () => {
+    const handleGameEndSpy = jest.fn(() => {});
 
-    render(<PirateWordsGame startingWord="z" />);
+    render(<PirateWordsGame startingWord="z" handleGameEnd={handleGameEndSpy} />);
 
     // Note: currently game is hardcoded to allow 6 guesses, if this is made smart, these guesses may need to be updated
     await Promise.all('abcdef'.split('').map(async (letterToGuess) => {
@@ -97,16 +98,53 @@ describe('TDD for PirateWordsGame', () => {
       await userEvent.click(buttonForLetter);
     }));
 
+    expect(handleGameEndSpy).toHaveBeenCalled();
+  });
+
+  test('when game is lost handleGameEnd is invoked with word to find, correct letters guessed, wrong letters guessed, and total number guesses', async () => {
+    const handleGameEndSpy = jest.fn(() => {});
+    const expectedWord = 'pirate';
+    const expectedCorrectGuesses = 'rate';
+    const expectedIncorrectGuesses = 'uvwxyz';
+    const lettersToGuess = expectedCorrectGuesses + expectedIncorrectGuesses;
+
+    render(<PirateWordsGame startingWord={expectedWord} handleGameEnd={handleGameEndSpy} />);
+
+    // Note: currently game is hardcoded to allow 6 guesses, if this is made smart, these guesses may need to be updated
+    await Promise.all(lettersToGuess.split('').map(async (letterToGuess) => {
+      const buttonForLetter = screen.getByRole('button', { name: new RegExp(letterToGuess, 'i') });
+      await userEvent.click(buttonForLetter);
+    }));
+
+    expect(handleGameEndSpy).toHaveBeenCalledWith({
+      loss: true,
+      wordToFind: expectedWord,
+      correctLettersGuessed: expectedCorrectGuesses,
+      wrongLettersGuessed: expectedIncorrectGuesses,
+      numGuesses: 6, // Note: losses are currently hardcoded to 6, will likely make smarter in future
+    });
+  });
+
+  test('when user loses they are able to try again', () => {
+    const expectedEndGameData = {
+      loss: true,
+      wordToFind: 'piratematt',
+      correctLettersGuessed: 'rate',
+      wrongLettersGuessed: 'uvwxyz',
+      numGuesses: 6, // Note: 6 is currently a hardcoded limit... will likely make this smarter in the future
+    }
+
+    render(<PirateWordsGame renderGameOver endGameData={expectedEndGameData} />);
+
     const lossNotification = screen.getByRole('alert', { name: 'game over: loss' });
     expect(lossNotification).toBeInTheDocument();
 
     const restartGameBtn = screen.getByRole('link', { name: /restart/i})
     expect(restartGameBtn).toBeInTheDocument();
-
-    // TODO: assert that new game can actually be played... holding off because I think adding player name + stats will remove this assert anyways
   });
 
-  test('when user correctly guesses word left they win and are able to play again if they want', async () => {
+  test('when user correctly guesses word the game ends', async () => {
+    const handleGameEndSpy = jest.fn(() => {});
     const expectedWord = 'pirate';
     const uniqueCorrectLetters = new Set(expectedWord.split(''));
 
@@ -117,12 +155,45 @@ describe('TDD for PirateWordsGame', () => {
       await userEvent.click(buttonForLetter);
     }));
 
+    expect(handleGameEndSpy).toHaveBeenCalled();
+  });
+
+  test('when game is won handleGameEnd is invoked with word found, wrong letters guessed, and guesses left', async () => {
+    const handleGameEndSpy = jest.fn(() => {});
+    const expectedWord = 'pirate';
+    const uniqueCorrectLetters = new Set(expectedWord.split(''));
+    const expectedMissedLetters = 'xz';
+    const lettersToGuess = [...expectedMissedLetters.split(''), ...Array.from(uniqueCorrectLetters)];
+
+    render(<PirateWordsGame startingWord={expectedWord} />);
+
+    await Promise.all(Array.from(lettersToGuess).map(async (letterToGuess) => {
+      const buttonForLetter = screen.getByRole('button', { name: new RegExp(letterToGuess, 'i') });
+      await userEvent.click(buttonForLetter);
+    }));
+
+    expect(handleGameEndSpy).toHaveBeenCalledWith({
+      won: true,
+      wordFound: expectedWord,
+      wrongLettersGuessed: expectedMissedLetters,
+      guessesLeft: 6 - expectedMissedLetters.length, // Note: 6 is currently a hardcoded limit... will likely make this smarter in the future
+    });
+  });
+
+  test('when user wins they are able to try again', () => {
+    const expectedEndGameData = {
+      won: true,
+      wordFound: 'piratematt',
+      wrongLettersGuessed: 'xz',
+      guessesLeft: 6 - 'xz'.length, // Note: 6 is currently a hardcoded limit... will likely make this smarter in the future
+    }
+
+    render(<PirateWordsGame renderGameOver endGameData={expectedEndGameData} />);
+
     const lossNotification = screen.getByRole('alert', { name: 'game over: win' });
     expect(lossNotification).toBeInTheDocument();
 
     const restartGameBtn = screen.getByRole('link', { name: /continue .* with another game/i})
     expect(restartGameBtn).toBeInTheDocument();
-
-    // TODO: assert that new game can actually be played... holding off because I think adding player name + stats will remove this assert anyways
   });
 });
