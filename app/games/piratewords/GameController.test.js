@@ -5,6 +5,26 @@ import { within } from '@testing-library/dom';
 import GameController from './GameController';
 import PirateWordsGame from './PirateWordsGame';
 
+// Superficial Game component with expected behavior accessible via data-testid's
+function FauxGame({
+  handleGameEnd,
+  renderGameOver,
+}) {
+  const handleEndingGame = (clickEvent) => {
+    handleGameEnd({});
+  };
+
+  if (renderGameOver) return (
+    <div data-testid={FauxGame.gameOverTextId}>Game Over</div>
+  );
+
+  return (
+    <button data-testid={FauxGame.endGameButtonId} onClick={handleEndingGame}>End Game</button>
+  );
+}
+FauxGame.endGameButtonId = 'end-game';
+FauxGame.gameOverTextId = 'game-over';
+
 describe('TDD for GameController', () => {
   test('User cannot play the game until they enter a player name, after which they can play the game', async () => {
     const expectedPlayerName = 'piratematt';
@@ -81,7 +101,49 @@ describe('TDD for GameController', () => {
     expect(aGameControl).toBeInTheDocument();
   });
 
-  test('User with entered player name can view stats after game end', () => {});
+  test('User with entered player name can view stats after game end', async () => {
+    const expectedPlayerName = 'piratematt';
 
-  test('User without player name cannot view stats after game end', () => {});
+    render(<GameController Game={FauxGame} />)
+
+    // enter player name
+    const playerNameInput = screen.getByRole('textbox', { name: /enter player name/i });
+    await userEvent.type(playerNameInput, expectedPlayerName);
+
+    const setPlayerName = screen.getByRole('button', { name: /start your adventure/i });
+    await userEvent.click(setPlayerName);
+
+    // End Faux Game
+    const gameEndBtn = screen.getByTestId(FauxGame.endGameButtonId);
+    await userEvent.click(gameEndBtn);
+
+    // Make sure we can see stats and faux game over screen
+    const stats = screen.getByText(/stats/i);  // @FUTURE: implement a better way to find stats
+    expect(stats).toBeInTheDocument();
+
+    const fauxEndGameMsg = screen.getByTestId(FauxGame.gameOverTextId);
+    expect(fauxEndGameMsg).toBeInTheDocument();
+  });
+
+  test('User without player name cannot view stats after game end', async () => {
+    render(<GameController Game={FauxGame} />)
+
+    // play without setting player name
+    const firstSetPlayerName = screen.getByRole('button', { name: /start your adventure/i });
+    await userEvent.click(firstSetPlayerName);
+
+    const yesContinueButton = screen.getByRole('button', { name: /i'm sure/i });
+    await userEvent.click(yesContinueButton);
+
+    // End Faux Game
+    const gameEndBtn = screen.getByTestId(FauxGame.endGameButtonId);
+    await userEvent.click(gameEndBtn);
+
+    // Make sure we cannot see stats, but can the faux game over screen
+    const stats = screen.queryByText(/stats/i);  // @FUTURE: implement a better way to find stats
+    expect(stats).toBe(null);
+
+    const fauxEndGameMsg = screen.getByTestId(FauxGame.gameOverTextId);
+    expect(fauxEndGameMsg).toBeInTheDocument();
+  });
 });

@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 import PlayerStats from './PlayerStats';
 
+// @FUTURE: genericize this to handle any game across the board
+
 function SetPlayerName({ handlePlayerName }) {
   const [renderNoPlayerNameWarning, setRenderNoPlayerNameWarning] = useState(false);
   const [playerName, setPlayerName] = useState('');
@@ -28,7 +30,7 @@ function SetPlayerName({ handlePlayerName }) {
 
   if (renderNoPlayerNameWarning) return (
     <>
-      <p>Are you sure you don't want to set a player name?</p>
+      <p>{"Are you sure you don't want to set a player name?"}</p>
       <p>Without a player name, no scores or progress will be saved.</p>
       <div>
         <button onClick={handleNamelessContinue}>{"I'm sure, take me to my adventure!"}</button>
@@ -70,7 +72,7 @@ export default function GameController({ Game }) {
   const [capturingPlayerName, setCapturingPlayerName] = useState(true);
   const [playingGame, setPlayingGame] = useState(false);
   const [playerName, setPlayerName] = useState('');
-  const [gameEndData, setGameEndData] = useState({});
+  const [endGameData, setEndGameData] = useState({});
 
   const handlePlayerName = (newPlayerName) => {
     setPlayerName(newPlayerName);
@@ -80,7 +82,7 @@ export default function GameController({ Game }) {
 
   const handleGameEnd = (gameEndData) => {
     setPlayingGame(false);
-    setGameEndData(gameEndData);
+    setEndGameData(gameEndData);
   }
 
   if (capturingPlayerName) return (

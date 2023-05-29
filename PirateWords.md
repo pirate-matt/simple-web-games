@@ -17,7 +17,7 @@ _Can you guess the captain's favorite word before you walk the plank?_
 
 ## TODO:s
 
-* [ ] v0.0 can play with hard coded word and win or lose
+* [x] v0.0 can play with hard coded word and win or lose
 * [ ] v0.1 can play with randomized word and win or lose
 * [ ] v0.2 can enter player name and view local scores by name
 * [ ] v0.3 add pirate themed "story telling" elements to UX
@@ -28,7 +28,7 @@ _Can you guess the captain's favorite word before you walk the plank?_
   * bias random word selection looking at completed and missed words
   * find word api to randomize words every deploy
 
-* [ ] enter player name
+* [x] enter player name
 * [ ] progress section
   * [x] exists
   * [ ] uses graphics in addition to numbers
@@ -42,5 +42,6 @@ _Can you guess the captain's favorite word before you walk the plank?_
 * [ ] view local player stats
   * [ ] export local player stats
   * [ ] import local player stats
+* [ ] improve style
 
 ## Next Steps

@@ -8,39 +8,49 @@ import styles from './piratewords.module.css';
 
 const guessableLetters = `abcdefghijklmnopqrstuvwxyz`.toUpperCase().split('');
 
-const calculateStartingGuesses = function calculateNumberGuessesLeft() {
+const calculateStartingGuesses = () => {
   // TODO: make this smarter... maybe word dependent?
   return 6;
 };
 
-const GAME_STATUSES = {
-  playing: 'PLAYING',
-  won: 'WON',
-  loss: 'LOSS',
-};
+const removeCorrectlyGuessedLetters = (guessedLetters, foundLetters) => (
+  guessedLetters.split('').filter(char => !foundLetters.includes(char)).join('')
+);
 
 export default function PirateWordsGame({
   startingWord = 'hello',
+  handleGameEnd = () => {},
   renderGameOver = false,
-  endGameData = {}
+  endGameData = {},
 }) {
   const wordToFind = startingWord.toUpperCase();
   const lettersToGuess = wordToFind.split('');
   const numUniqueLettersToFind = (new Set(lettersToGuess)).size;
+  const numGuessesToStart = calculateStartingGuesses();
 
   const [guessedLetters, setGuessedLetters] = useState('');
-  const [numGuessesLeft, setNumGuessesLeft] = useState(calculateStartingGuesses());
+  const [numGuessesLeft, setNumGuessesLeft] = useState(numGuessesToStart);
   const [foundLetters, setFoundLetters] = useState('');
-  const [gameStatus, setGameStatus] = useState(GAME_STATUSES.playing);
 
   useEffect(() => {
     if (numGuessesLeft <= 0) {
-      setGameStatus(GAME_STATUSES.loss);
+      handleGameEnd({
+        loss: true,
+        wordToFind,
+        correctLettersGuessed: foundLetters,
+        wrongLettersGuessed: removeCorrectlyGuessedLetters(guessedLetters, foundLetters),
+        numGuesses: numGuessesToStart,
+      });
     }
     else if (foundLetters.length === numUniqueLettersToFind) {
-      setGameStatus(GAME_STATUSES.won);
+      handleGameEnd({
+        won: true,
+        wordFound: wordToFind,
+        wrongLettersGuessed: removeCorrectlyGuessedLetters(guessedLetters, foundLetters),
+        numGuessesLeft,
+      });
     }
-  }, [numGuessesLeft, foundLetters, setGameStatus, numUniqueLettersToFind]);
+  }, [numGuessesLeft, foundLetters, numUniqueLettersToFind, handleGameEnd, guessedLetters, wordToFind, numGuessesToStart]);
 
 
   const handleGuess = (clickEvent) => {

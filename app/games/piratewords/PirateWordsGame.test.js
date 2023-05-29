@@ -103,9 +103,9 @@ describe('TDD for PirateWordsGame', () => {
 
   test('when game is lost handleGameEnd is invoked with word to find, correct letters guessed, wrong letters guessed, and total number guesses', async () => {
     const handleGameEndSpy = jest.fn(() => {});
-    const expectedWord = 'pirate';
-    const expectedCorrectGuesses = 'rate';
-    const expectedIncorrectGuesses = 'uvwxyz';
+    const expectedWord = 'pirate'.toUpperCase();
+    const expectedCorrectGuesses = 'rate'.toUpperCase();
+    const expectedIncorrectGuesses = 'uvwxyz'.toUpperCase();
     const lettersToGuess = expectedCorrectGuesses + expectedIncorrectGuesses;
 
     render(<PirateWordsGame startingWord={expectedWord} handleGameEnd={handleGameEndSpy} />);
@@ -130,8 +130,7 @@ describe('TDD for PirateWordsGame', () => {
       loss: true,
       wordToFind: 'piratematt',
       correctLettersGuessed: 'rate',
-      wrongLettersGuessed: 'uvwxyz',
-      numGuesses: 6, // Note: 6 is currently a hardcoded limit... will likely make this smarter in the future
+      wrongLettersGuessed: 'uvwxyz',  // Note: can derive num guesses to lost from this length
     }
 
     render(<PirateWordsGame renderGameOver endGameData={expectedEndGameData} />);
@@ -148,7 +147,7 @@ describe('TDD for PirateWordsGame', () => {
     const expectedWord = 'pirate';
     const uniqueCorrectLetters = new Set(expectedWord.split(''));
 
-    render(<PirateWordsGame startingWord={expectedWord} />);
+    render(<PirateWordsGame startingWord={expectedWord} handleGameEnd={handleGameEndSpy} />);
 
     await Promise.all(Array.from(uniqueCorrectLetters).map(async (letterToGuess) => {
       const buttonForLetter = screen.getByRole('button', { name: new RegExp(letterToGuess, 'i') });
@@ -160,12 +159,12 @@ describe('TDD for PirateWordsGame', () => {
 
   test('when game is won handleGameEnd is invoked with word found, wrong letters guessed, and guesses left', async () => {
     const handleGameEndSpy = jest.fn(() => {});
-    const expectedWord = 'pirate';
+    const expectedWord = 'pirate'.toUpperCase();
     const uniqueCorrectLetters = new Set(expectedWord.split(''));
-    const expectedMissedLetters = 'xz';
+    const expectedMissedLetters = 'xz'.toUpperCase();
     const lettersToGuess = [...expectedMissedLetters.split(''), ...Array.from(uniqueCorrectLetters)];
 
-    render(<PirateWordsGame startingWord={expectedWord} />);
+    render(<PirateWordsGame startingWord={expectedWord} handleGameEnd={handleGameEndSpy} />);
 
     await Promise.all(Array.from(lettersToGuess).map(async (letterToGuess) => {
       const buttonForLetter = screen.getByRole('button', { name: new RegExp(letterToGuess, 'i') });
@@ -176,7 +175,7 @@ describe('TDD for PirateWordsGame', () => {
       won: true,
       wordFound: expectedWord,
       wrongLettersGuessed: expectedMissedLetters,
-      guessesLeft: 6 - expectedMissedLetters.length, // Note: 6 is currently a hardcoded limit... will likely make this smarter in the future
+      numGuessesLeft: 6 - expectedMissedLetters.length, // Note: 6 is currently a hardcoded limit... will likely make this smarter in the future
     });
   });
 
