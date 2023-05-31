@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { within } from '@testing-library/dom';
 
 import GameController from './GameController';
+import { nameGameJoinChar } from './PlayerStats';
 import PirateWordsGame from './PirateWordsGame';
 
 // Superficial Game component with expected behavior accessible via data-testid's
@@ -24,6 +25,10 @@ function FauxGame({
 }
 FauxGame.endGameButtonId = 'end-game';
 FauxGame.gameOverTextId = 'game-over';
+FauxGame.statsId = 'faux-game-stats';
+FauxGame.renderStats = (playerName) => (
+  <div data-testid={FauxGame.statsId}>Faux Game Stats</div>
+);
 
 describe('TDD for GameController', () => {
   test('User cannot play the game until they enter a player name, after which they can play the game', async () => {
@@ -49,6 +54,27 @@ describe('TDD for GameController', () => {
     // assert we can play game
     const aGameControl = screen.getByRole('button', { name: new RegExp(expectedPlayerName[0], 'i')});
     expect(aGameControl).toBeInTheDocument();
+  });
+
+  test(`User cannot use "${nameGameJoinChar}" character in player names (reserved for data storage key)`, async () => {
+    const illegalPlayerName = `piratematt${nameGameJoinChar}writer of tests`;
+    const expectedPlayer = illegalPlayerName.replace(new RegExp(nameGameJoinChar, 'g'), ' ');
+
+    render(<GameController Game={PirateWordsGame} />);
+
+    // enter player name with illegal char & assert we warn the user when they use the illegal char
+    const playerNameInput = screen.getByRole('textbox', { name: /enter player name/i });
+    const userTyping = userEvent.type(playerNameInput, illegalPlayerName);
+
+    const illegalCharMsg = await screen.findByRole('alert', {
+      name: new RegExp(`cannot use the "${nameGameJoinChar}" character`, 'i')
+    });
+    expect(illegalCharMsg).toBeInTheDocument();
+
+    // wait for typing to finish and assert we didn't allow any illegal characters in the final value
+    await userTyping;
+
+    expect(playerNameInput.value).toBe(expectedPlayer);
   });
 
   test('User not entering a player name is warned none of their scores or progress will be saved, before being allowed to play the game', async () => {
@@ -118,7 +144,7 @@ describe('TDD for GameController', () => {
     await userEvent.click(gameEndBtn);
 
     // Make sure we can see stats and faux game over screen
-    const stats = screen.getByText(/stats/i);  // @FUTURE: implement a better way to find stats
+    const stats = screen.getByTestId(FauxGame.statsId);
     expect(stats).toBeInTheDocument();
 
     const fauxEndGameMsg = screen.getByTestId(FauxGame.gameOverTextId);

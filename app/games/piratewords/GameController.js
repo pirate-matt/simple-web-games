@@ -2,16 +2,27 @@
 
 import { useState } from 'react';
 
-import PlayerStats from './PlayerStats';
+import PlayerStats, { nameGameJoinChar } from './PlayerStats';
 
 // @FUTURE: genericize this to handle any game across the board
 
 function SetPlayerName({ handlePlayerName }) {
-  const [renderNoPlayerNameWarning, setRenderNoPlayerNameWarning] = useState(false);
   const [playerName, setPlayerName] = useState('');
+  const [renderIllegalCharWarning, setRenderIllegalCharWarning] = useState(false);
+  const [renderNoPlayerNameWarning, setRenderNoPlayerNameWarning] = useState(false);
 
   const handlePlayerNameChange = (changeEvent) => {
-    setPlayerName(changeEvent.target.value);
+    let newPlayerName = changeEvent.target.value;
+
+    if (newPlayerName.indexOf(nameGameJoinChar) >= 0) {
+      setRenderIllegalCharWarning(true);
+      newPlayerName = newPlayerName.replace(new RegExp(nameGameJoinChar, 'g'), ' ');
+    }
+    else {
+      setRenderIllegalCharWarning(false);
+    }
+
+    setPlayerName(newPlayerName);
   };
 
   const handlePlayerNameButtonClick = (clickEvent) => {
@@ -42,14 +53,26 @@ function SetPlayerName({ handlePlayerName }) {
   return (
     <>
       <p>Before you set off on your high seas adventure with pirates, what shall we call you?</p>
-      <label htmlFor="player-name">Enter player name: </label>
-      <input
-        id="player-name"
-        type="text"
-        value={playerName}
-        onChange={handlePlayerNameChange}
-      ></input>
-      <button onClick={handlePlayerNameButtonClick}>Start your adventure!</button>
+      <div>
+        <label htmlFor="player-name">Enter player name: </label>
+        <input
+          id="player-name"
+          type="text"
+          value={playerName}
+          onChange={handlePlayerNameChange}
+        ></input>
+      </div>
+      {renderIllegalCharWarning  && (
+        <div
+          role="alert"
+          aria-label={`Sorry, you cannot use the "${nameGameJoinChar}" character in your player name.`}
+        >
+          {`Sorry, you cannot use the "${nameGameJoinChar}" character in your player name.`}
+        </div>
+      )}
+      <div>
+        <button onClick={handlePlayerNameButtonClick}>Start your adventure!</button>
+      </div>
     </>
   );
 }
@@ -98,8 +121,8 @@ export default function GameController({ Game }) {
 
   return (
     <>
-      <PlayerStats Game={Game} playerName={playerName} />
       <Game renderGameOver endGameData={endGameData} />
+      <PlayerStats Game={Game} playerName={playerName} />
     </>
   );
 }

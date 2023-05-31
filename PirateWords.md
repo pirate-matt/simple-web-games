@@ -29,6 +29,8 @@ _Can you guess the captain's favorite word before you walk the plank?_
   * find word api to randomize words every deploy
 
 * [x] enter player name
+  * [ ] user can press enter to set player name
+  * [ ] user retains player name when playing another game
 * [ ] progress section
   * [x] exists
   * [ ] uses graphics in addition to numbers
@@ -39,9 +41,16 @@ _Can you guess the captain's favorite word before you walk the plank?_
   * [ ] dynamically pick starting word
 * [x] win check
 * [x] lose check
-* [ ] view local player stats
+* [ ] player stats
+  * [x] set stats for a game+player
+  * [x] retrieve stats for a game+player
+  * [x] update stats for a game+player
+  * [x] reset/clear stats for a game+player
+  * [x] reset/clear stats for a player
+  * [ ] calculate stats for PirateWords
   * [ ] export local player stats
   * [ ] import local player stats
 * [ ] improve style
+* [ ] handle localStorage being full
 
 ## Next Steps

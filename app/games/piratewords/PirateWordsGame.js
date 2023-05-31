@@ -3,8 +3,10 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import styles from './piratewords.module.css';
+import * as STATICS from './statics';
+import PirateWordsStats from './PirateWordsStats';
 
+import styles from './piratewords.module.css';
 
 const guessableLetters = `abcdefghijklmnopqrstuvwxyz`.toUpperCase().split('');
 
@@ -141,7 +143,7 @@ export default function PirateWordsGame({
           Congratulations!
         </h2>
         <p>
-          {`You correctly guessed the Captain's favorite word, <em>${wordToFind.toLowerCase()}</em>, with ${numGuessesLeft} guess${numGuessesLeft > 1 ? 'es' : ''} to spare!`}
+          {`You correctly guessed the Captain's favorite word, `}<em>{wordToFind.toLowerCase()}</em>, with {numGuessesLeft} guess{numGuessesLeft > 1 ? 'es' : ''} to spare!
         </p>
         <p>
           The crew helps you off the plank, would you like <Link href="/games/piratewords" onClick={handleRestart}>continue your adventure with another game</Link>?
@@ -150,7 +152,6 @@ export default function PirateWordsGame({
       </div>
     </>
   );
-
 
   // default assume endGameData.loss === true
   return (
@@ -176,3 +177,10 @@ export default function PirateWordsGame({
     </>
   );
 }
+
+PirateWordsGame.renderStats = (playerName) => (
+  // TODO: stop using this `.name` pattern in favor of the statics.js { title } export
+  <PirateWordsStats playerName={playerName} gameName={PirateWordsGame.name} />
+);
+
+PirateWordsGame.title = STATICS.title;

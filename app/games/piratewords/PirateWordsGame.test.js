@@ -195,4 +195,16 @@ describe('TDD for PirateWordsGame', () => {
     const restartGameBtn = screen.getByRole('link', { name: /continue .* with another game/i})
     expect(restartGameBtn).toBeInTheDocument();
   });
+
+  test('ensure PirateWordsGame.renderStats is set for use with PlayerStats (and does not render nothing)', () => {
+    const expectedPlayer = 'piratematt';
+
+    const { container } = render(
+      <>
+        {PirateWordsGame.renderStats(expectedPlayer)}
+      </>
+    );
+
+    expect(container).not.toBeEmptyDOMElement();
+  });
 });
