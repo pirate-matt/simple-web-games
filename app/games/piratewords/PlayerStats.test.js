@@ -165,10 +165,8 @@ describe('TDD for PlayerStats component', () => {
 
     render(<PlayerStats playerName="piratematt" Game={FauxGame} />);
 
-    expect(screen.getByText(expectedGameTitle, {
-      selector: 'h2',
-      exact: false,
-    })).toBeInTheDocument();
+    const header = screen.getByRole('heading');
+    expect(header.textContent).toMatch(expectedGameTitle);
   });
 
   test ('Gracefully handle the absence of Game.title', () => {

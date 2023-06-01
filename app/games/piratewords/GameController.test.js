@@ -2,9 +2,50 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { within } from '@testing-library/dom';
 
-import GameController from './GameController';
+import GameController, { SetPlayerName } from './GameController';
 import { nameGameJoinChar } from './PlayerStats';
 import PirateWordsGame from './PirateWordsGame';
+
+// ---- SetPlayerName TESTS ----
+
+describe('TDD for SetPlayerName', () => {
+  test(`User cannot use "${nameGameJoinChar}" character in player names (reserved for data storage key)`, async () => {
+    const illegalPlayerName = `piratematt${nameGameJoinChar}writer of tests`;
+    const expectedPlayer = illegalPlayerName.replace(new RegExp(nameGameJoinChar, 'g'), ' ');
+
+    render(<SetPlayerName/>);
+
+    // enter player name with illegal char & assert we warn the user when they use the illegal char
+    const playerNameInput = screen.getByRole('textbox', { name: /enter player name/i });
+    const userTyping = userEvent.type(playerNameInput, illegalPlayerName);
+
+    const illegalCharMsg = await screen.findByRole('alert', {
+      name: new RegExp(`cannot use the "${nameGameJoinChar}" character`, 'i')
+    });
+    expect(illegalCharMsg).toBeInTheDocument();
+
+    // wait for typing to finish and assert we didn't allow any illegal characters in the final value
+    await userTyping;
+
+    expect(playerNameInput.value).toBe(expectedPlayer);
+  });
+
+  test('User can use enter key to set player name', async () => {
+    const spy = jest.fn();
+    const expectedName = 'piratematt';
+
+    render(<SetPlayerName handlePlayerName={spy} />);
+
+    const playerNameInput = screen.getByRole('textbox', { name: /enter player name/i });
+    await userEvent.type(playerNameInput, expectedName);
+
+    await userEvent.keyboard('{Enter}');
+
+    expect(spy).toHaveBeenCalledWith(expectedName);
+  });
+});
+
+// ---- GameController TESTS ----
 
 // Superficial Game component with expected behavior accessible via data-testid's
 function FauxGame({
@@ -54,27 +95,6 @@ describe('TDD for GameController', () => {
     // assert we can play game
     const aGameControl = screen.getByRole('button', { name: new RegExp(expectedPlayerName[0], 'i')});
     expect(aGameControl).toBeInTheDocument();
-  });
-
-  test(`User cannot use "${nameGameJoinChar}" character in player names (reserved for data storage key)`, async () => {
-    const illegalPlayerName = `piratematt${nameGameJoinChar}writer of tests`;
-    const expectedPlayer = illegalPlayerName.replace(new RegExp(nameGameJoinChar, 'g'), ' ');
-
-    render(<GameController Game={PirateWordsGame} />);
-
-    // enter player name with illegal char & assert we warn the user when they use the illegal char
-    const playerNameInput = screen.getByRole('textbox', { name: /enter player name/i });
-    const userTyping = userEvent.type(playerNameInput, illegalPlayerName);
-
-    const illegalCharMsg = await screen.findByRole('alert', {
-      name: new RegExp(`cannot use the "${nameGameJoinChar}" character`, 'i')
-    });
-    expect(illegalCharMsg).toBeInTheDocument();
-
-    // wait for typing to finish and assert we didn't allow any illegal characters in the final value
-    await userTyping;
-
-    expect(playerNameInput.value).toBe(expectedPlayer);
   });
 
   test('User not entering a player name is warned none of their scores or progress will be saved, before being allowed to play the game', async () => {

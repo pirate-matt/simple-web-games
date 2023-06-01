@@ -1,12 +1,7 @@
-import Link from 'next/link';
+import HomePage, { metadata } from './Home.page';
 
-export default function Home() {
-  return (
-    <main>
-      <h1>Play Games</h1>
-      <div>
-        <Link href="/games/piratewords">Guess words with pirates!</Link>
-      </div>
-    </main>
-  )
+export {
+  metadata,
 }
+
+export default HomePage;

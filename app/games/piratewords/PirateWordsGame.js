@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import * as STATICS from './statics';
-import PirateWordsStats from './PirateWordsStats';
+import WORDS from './words';
+import GAME_STATICS from './statics';
+import PirateWordsStats, { addLossToStats, addWinToStats } from './PirateWordsStats';
 
 import styles from './piratewords.module.css';
 
@@ -15,17 +16,36 @@ const calculateStartingGuesses = () => {
   return 6;
 };
 
+export const isNotValidWordForGame = (word) => (
+  !word || word.search(/[^a-zA-Z]/) > -1
+);
+
+export const pickRandomWord = () => {
+  return WORDS[
+    Math.floor(Math.random() * WORDS.length)
+  ];
+};
+
+export const calculateStartingWord = (word = '') => {
+  while(isNotValidWordForGame(word)) {
+    word = pickRandomWord();
+  }
+
+  return word;
+}
+
 const removeCorrectlyGuessedLetters = (guessedLetters, foundLetters) => (
   guessedLetters.split('').filter(char => !foundLetters.includes(char)).join('')
 );
 
 export default function PirateWordsGame({
-  startingWord = 'hello',
+  startingWord,
+  playerName,
   handleGameEnd = () => {},
   renderGameOver = false,
   endGameData = {},
 }) {
-  const wordToFind = startingWord.toUpperCase();
+  const wordToFind = calculateStartingWord(startingWord).toUpperCase();
   const lettersToGuess = wordToFind.split('');
   const numUniqueLettersToFind = (new Set(lettersToGuess)).size;
   const numGuessesToStart = calculateStartingGuesses();
@@ -35,24 +55,30 @@ export default function PirateWordsGame({
   const [foundLetters, setFoundLetters] = useState('');
 
   useEffect(() => {
+    if (wordToFind === undefined) return;  // setup hasn't happened yet
+
     if (numGuessesLeft <= 0) {
-      handleGameEnd({
+      const lossData = {
         loss: true,
         wordToFind,
         correctLettersGuessed: foundLetters,
         wrongLettersGuessed: removeCorrectlyGuessedLetters(guessedLetters, foundLetters),
         numGuesses: numGuessesToStart,
-      });
+      };
+      if(playerName && playerName !== '') addLossToStats(playerName, lossData);
+      handleGameEnd(lossData);
     }
     else if (foundLetters.length === numUniqueLettersToFind) {
-      handleGameEnd({
+      const winData = {
         won: true,
         wordFound: wordToFind,
         wrongLettersGuessed: removeCorrectlyGuessedLetters(guessedLetters, foundLetters),
         numGuessesLeft,
-      });
+      };
+      if(playerName && playerName !== '') addWinToStats(playerName, winData);
+      handleGameEnd(winData);
     }
-  }, [numGuessesLeft, foundLetters, numUniqueLettersToFind, handleGameEnd, guessedLetters, wordToFind, numGuessesToStart]);
+  }, [numGuessesLeft, foundLetters, numUniqueLettersToFind, handleGameEnd, guessedLetters, wordToFind, numGuessesToStart, playerName]);
 
 
   const handleGuess = (clickEvent) => {
@@ -179,8 +205,7 @@ export default function PirateWordsGame({
 }
 
 PirateWordsGame.renderStats = (playerName) => (
-  // TODO: stop using this `.name` pattern in favor of the statics.js { title } export
-  <PirateWordsStats playerName={playerName} gameName={PirateWordsGame.name} />
+  <PirateWordsStats playerName={playerName} gameName={GAME_STATICS.title} />
 );
 
-PirateWordsGame.title = STATICS.title;
+PirateWordsGame.title = GAME_STATICS.title;

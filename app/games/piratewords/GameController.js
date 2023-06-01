@@ -6,7 +6,7 @@ import PlayerStats, { nameGameJoinChar } from './PlayerStats';
 
 // @FUTURE: genericize this to handle any game across the board
 
-function SetPlayerName({ handlePlayerName }) {
+export function SetPlayerName({ handlePlayerName }) {
   const [playerName, setPlayerName] = useState('');
   const [renderIllegalCharWarning, setRenderIllegalCharWarning] = useState(false);
   const [renderNoPlayerNameWarning, setRenderNoPlayerNameWarning] = useState(false);
@@ -25,7 +25,8 @@ function SetPlayerName({ handlePlayerName }) {
     setPlayerName(newPlayerName);
   };
 
-  const handlePlayerNameButtonClick = (clickEvent) => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     if (playerName === '') return setRenderNoPlayerNameWarning(true);
 
     handlePlayerName(playerName);
@@ -53,26 +54,28 @@ function SetPlayerName({ handlePlayerName }) {
   return (
     <>
       <p>Before you set off on your high seas adventure with pirates, what shall we call you?</p>
-      <div>
-        <label htmlFor="player-name">Enter player name: </label>
-        <input
-          id="player-name"
-          type="text"
-          value={playerName}
-          onChange={handlePlayerNameChange}
-        ></input>
-      </div>
-      {renderIllegalCharWarning  && (
-        <div
-          role="alert"
-          aria-label={`Sorry, you cannot use the "${nameGameJoinChar}" character in your player name.`}
-        >
-          {`Sorry, you cannot use the "${nameGameJoinChar}" character in your player name.`}
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="player-name">Enter player name: </label>
+          <input
+            id="player-name"
+            type="text"
+            value={playerName}
+            onChange={handlePlayerNameChange}
+          ></input>
         </div>
-      )}
-      <div>
-        <button onClick={handlePlayerNameButtonClick}>Start your adventure!</button>
-      </div>
+        {renderIllegalCharWarning  && (
+          <div
+            role="alert"
+            aria-label={`Sorry, you cannot use the "${nameGameJoinChar}" character in your player name.`}
+          >
+            {`Sorry, you cannot use the "${nameGameJoinChar}" character in your player name.`}
+          </div>
+        )}
+        <div>
+          <input type="submit" value="Start your adventure!" />
+        </div>
+      </form>
     </>
   );
 }
@@ -115,13 +118,13 @@ export default function GameController({ Game }) {
   if (playingGame) return (
     <>
       {playerName !== '' && <PlayingAs playerName={playerName} />}
-      <Game handleGameEnd={handleGameEnd} />
+      <Game playerName={playerName} handleGameEnd={handleGameEnd} />
     </>
   );
 
   return (
     <>
-      <Game renderGameOver endGameData={endGameData} />
+      <Game playerName={playerName} renderGameOver endGameData={endGameData} />
       <PlayerStats Game={Game} playerName={playerName} />
     </>
   );
