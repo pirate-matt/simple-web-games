@@ -45,17 +45,33 @@ export default function PirateWordsGame({
   renderGameOver = false,
   endGameData = {},
 }) {
-  const wordToFind = calculateStartingWord(startingWord).toUpperCase();
-  const lettersToGuess = wordToFind.split('');
-  const numUniqueLettersToFind = (new Set(lettersToGuess)).size;
-  const numGuessesToStart = calculateStartingGuesses();
+  // const wordToFind = calculateStartingWord(startingWord).toUpperCase();
+  // const lettersToGuess = wordToFind.split('');
+  // const numUniqueLettersToFind = (new Set(lettersToGuess)).size;
+  // const numGuessesToStart = calculateStartingGuesses();
+  const [wordToFind, setWordToFind] = useState('');
+  const [lettersToGuess, setLettersToGuess] = useState([]);
+  const [numUniqueLettersToFind, setNumUniqueLettersToFind] = useState(0);
+  const [numGuessesToStart, setNumGuessesToStart] = useState(0);
 
   const [guessedLetters, setGuessedLetters] = useState('');
   const [numGuessesLeft, setNumGuessesLeft] = useState(numGuessesToStart);
   const [foundLetters, setFoundLetters] = useState('');
 
   useEffect(() => {
-    if (wordToFind === undefined) return;  // setup hasn't happened yet
+    const word = calculateStartingWord(startingWord).toUpperCase();
+    const letters = word.split('');
+    setWordToFind(word);
+    setLettersToGuess(letters);
+    setNumUniqueLettersToFind((new Set(letters)).size)
+
+    const startingGuesses = calculateStartingGuesses();
+    setNumGuessesToStart(startingGuesses);
+    setNumGuessesLeft(startingGuesses);
+  }, [startingWord, setWordToFind, setLettersToGuess, setNumUniqueLettersToFind, setNumGuessesToStart, setNumGuessesLeft]);
+
+  useEffect(() => {
+    if (wordToFind === '') return;  // setup hasn't happened yet
 
     if (numGuessesLeft <= 0) {
       const lossData = {

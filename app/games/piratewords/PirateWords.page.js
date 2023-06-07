@@ -3,6 +3,8 @@ import Link from 'next/link';
 import GameController from './GameController';
 import PirateWordsGame from './PirateWordsGame';
 
+import PirateWordsStats from './PirateWordsStats';
+
 import styles from './piratewords.module.css';
 
 const metadata = {
@@ -13,8 +15,14 @@ export default function Page() {
   return (
     <>
       <main>
-        <h1>Pirate Words</h1>
+        <h1>Temp Stats Block</h1>
+        <PirateWordsStats playerName="piratematt" gameName="PirateWords" />
 
+        <br />
+        <hr />
+        <br />
+
+        <h1>Pirate Words</h1>
         <GameController Game={PirateWordsGame} />
       </main>
       <footer className={styles.footer}>

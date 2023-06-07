@@ -32,6 +32,16 @@
   text-transform: uppercase;
 }
 
+.graph--wins-at-num-guesses-left {
+  height: 100px;
+  margin: 0 10px;
+}
+
+.graph--wins-at-num-guesses-left--win-count {
+  border: solid 1px darkblue;
+  background: lightblue;
+}
+
 .footer {
   margin-top: 2em;
 }

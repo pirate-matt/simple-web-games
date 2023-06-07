@@ -1,6 +1,11 @@
+'use client';
+
+import CountsAtValuesGraph from "./CountsAtValuesGraph";
 import { getStats, updateStats } from "./PlayerStats";
 
 import GAME_STATICS from './statics';
+
+import styles from './piratewords.module.css';
 
 // ---- UTIL FUNCTIONS ----
 
@@ -74,17 +79,120 @@ function addWinToStats(playerName, winData) {
 
 // ---- VISUAL COMPONENT ----
 
+function calculateWinsAtNumGuessesGraphData(winsAtNumGuessesLeft) {
+  const lowestNumGuessesLeft = 1;  // at 0 it'd be a loss, not a win
+  const highestNumGuessesLeft = Math.max(
+    ...Object.keys(winsAtNumGuessesLeft).map(Number)
+  );
+  const highestWinCount = Math.max(
+    ...Object.values(winsAtNumGuessesLeft)
+  );
+
+  const orderedGraphData = [];
+
+  // Using descending num guesses left order
+  for(let numGuessesLeft = highestNumGuessesLeft; numGuessesLeft >= lowestNumGuessesLeft; numGuessesLeft--) {
+    const winCount = winsAtNumGuessesLeft[numGuessesLeft];
+
+    orderedGraphData.push({
+      value: numGuessesLeft,
+      topCount: winCount,
+      topHeightPercentage: (winCount / highestWinCount) * 100,
+    });
+  }
+
+  return orderedGraphData;
+}
+
+function calculateCorrectAndIncorrectGuessesAtEachLetter(correctGuessCounts, incorrectGuessCounts) {
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase();
+
+  const largestCount = Math.max(
+    ...Object.values(incorrectGuessCounts),
+    ...Object.values(correctGuessCounts),
+  );
+
+  return alphabet.split('').reduce((accumulator, letter) => {
+    const correctCount = correctGuessCounts[letter] || 0;
+    const bottomCount = incorrectGuessCounts[letter] || 0;
+
+    accumulator.push({
+      value: letter,
+      topCount: correctCount,
+      topHeightPercentage: (correctCount / largestCount) * 100,
+      bottomCount: bottomCount,
+      bottomHeightPercentage: (bottomCount / largestCount) * 100,
+    });
+
+    return accumulator;
+  }, []);
+}
+
+function calculateGameStats(stats = {}) {
+  const {
+    wins = 0,
+    losses = 0,
+    winsAtNumGuessesLeft,
+    correctGuessCounts,
+    incorrectGuessCounts,
+  } = stats;
+
+  const winPercentage = wins === 0 ? 0 : Math.round((
+    wins / (wins + losses)
+  ) * 100);
+
+  const winsAtNumGuesses = calculateWinsAtNumGuessesGraphData(winsAtNumGuessesLeft);
+
+  const correctAndIncorrectGuessesAtEachLetter = calculateCorrectAndIncorrectGuessesAtEachLetter(
+    correctGuessCounts,
+    incorrectGuessCounts,
+  );
+
+  return {
+    ...stats,
+    winPercentage,
+    winsAtNumGuesses,
+    correctAndIncorrectGuessesAtEachLetter,
+  };
+}
+
 export default function PirateWordsStats({ playerName, gameName }) {
-  const stats = getStats(playerName, gameName);
+  if (typeof localStorage?.getItem !== 'function') return;
+
+  const rawStats = getStats(playerName, gameName);
+  const stats = calculateGameStats(rawStats);  // TODO: consider if this is worth only running once
+  const {
+    winPercentage,
+    winsAtNumGuesses,
+    correctAndIncorrectGuessesAtEachLetter,
+  } = stats;
 
   return (
     <>
-      <h2>stats header</h2>
-      <div>
-        TODO: nicely display stats for {playerName}:
-        <br />
-        <pre>{JSON.stringify(stats, null, 2)}.</pre>
-      </div>
+      <h2>{`${playerName}'s ${gameName} Stats`}</h2>
+      <h3>
+        <label htmlFor="win-percentage">Wins </label>
+        <output id="win-percentage">{`${winPercentage}%`}</output>
+      </h3>
+
+      <br />
+
+      <h3>Win counts</h3>
+      <CountsAtValuesGraph
+        topCountLabel="Wins"
+        valueLabel="Guesses Left"
+        countsAtValues={winsAtNumGuesses}
+      />
+
+      <br />
+
+      <h3>Correct & Incorrect Guesses</h3>
+      <CountsAtValuesGraph
+        topCountLabel="correctly guessed"
+        valueLabel="letter"
+        bottomCountLabel="incorrectly guessed"
+        countsAtValues={correctAndIncorrectGuessesAtEachLetter}
+      />
     </>
   );
 }

@@ -355,10 +355,37 @@ describe('TDD for PirateWords Stats utils', () => {
 
 describe('TDD for PirateWords Stats display component', () => {
   const expectedPlayer = 'piratematt';
+  const noStatsPlayer = 'rowin';
   const expectedGame = 'PirateWords';
   const expectedStats = {
-    wins: 42,
-    losses: 39,
+    "wins": 11,
+    "winsAtNumGuessesLeft": {
+      "1": 4, "2": 2, "3": 2, "4": 2, "6": 1,
+    },
+    "correctWordCounts": {
+      "THIEF": 1, "VILLAIN": 1, "TREASURE": 1, "WEAPONS": 1, "RAID": 1,
+      "TRUCE": 1, "VIOLENT": 1, "LANDLUBBER": 1, "CANNON": 1, "ARMADA": 1,
+      "BATTLE": 1,
+    },
+    "incorrectGuessCounts": {
+      "A": 9, "B": 2, "C": 3, "E": 6, "F": 2, "G": 4, "H": 1, "I": 10,
+      "K": 1, "L": 4, "M": 6, "N": 2, "O": 9, "P": 3, "Q": 1, "R": 10,
+      "S": 14, "T": 12, "U": 7, "W": 2, "X": 1, "Y": 1,
+    },
+    "correctGuessCounts": {
+      "A": 14, "B": 2, "C": 2, "D": 3, "E": 15, "F": 1, "G": 1, "H": 1,
+      "I": 6, "L": 5, "M": 1, "N": 8, "O": 5, "P": 1, "R": 10, "S": 3,
+      "T": 8, "U": 5, "V": 3, "W": 1,
+    },
+    "losses": 12,
+    "lossesAtNumGuesses": {
+      "6": 12,
+    },
+    "missedWordCounts": {
+      "ROBBER": 1, "DISHONEST": 1, "DAGGER": 1, "DECK": 1, "LUCRE": 1,
+      "NAVIGATE": 1, "PARLEY": 1, "VANDALIZE": 1, "UNLAWFUL": 1, "DARING": 1,
+      "BOUNTY": 1, "WORLD": 1,
+    }
   };
 
   beforeEach(() => {
@@ -369,7 +396,7 @@ describe('TDD for PirateWords Stats display component', () => {
     localStorage.clear();
   });
 
-  test('display stats header', () => {
+  test('display stats header with player and game name', () => {
     render(<PirateWordsStats playerName={expectedPlayer} gameName={expectedGame} />);
 
     const header = screen.getByRole('heading');
@@ -379,26 +406,41 @@ describe('TDD for PirateWords Stats display component', () => {
   });
 
   test('display win %', () => {
-    // const expectedPlayer = 'piratematt';
-    // const expectedGame = 'PirateWords';
-    // const playerGameStats = {
-    //   wins: 4,
-    //   losses: 2,
-    // };
-    // const expectedWinPercentage = `${Math.round(
-    //   playerGameStats.wins / (playerGameStats.wins + playerGameStats.losses)
-    // )}%`;
+    const expectedWinPercentage = '48%'; // 11 wins, 12 losses
 
-    // setStats(expectedPlayer, expectedGame, playerGameStats);
+    render(<PirateWordsStats playerName={expectedPlayer} gameName={expectedGame} />);
 
-    // render(<PirateWordsStats playerName={expectedPlayer} gameName={expectedGame} />);
-
-    // const winPercentage = screen.getByLabelText(/win percentage/i);
-    // expect(winPercentage.textContent).toBe(expectedWinPercentage);
+    const winPercentage = screen.getByLabelText(/wins/i);
+    expect(winPercentage.textContent).toBe(expectedWinPercentage);
   });
 
+  test('win % handles no player with no game stats', () => {
+    const expectedWinPercentage = '0%';
+
+    render(<PirateWordsStats playerName={noStatsPlayer} gameName={expectedGame} />);
+
+    const winPercentage = screen.getByLabelText(/wins/i);
+    expect(winPercentage.textContent).toBe(expectedWinPercentage);
+  });
+
+  test('display wins at num guesses', () => {
+    const expectedWinsAtNumGuesses = { "1": 4, "2": 2, "3": 2, "4": 2, "6": 1, };
+
+    render(<PirateWordsStats playerName={noStatsPlayer} gameName={expectedGame} />);
+
+    const graph = screen.getByLabelText('graph showing the count of wins at number of guesses left across all wins');
+    expect(graph).toBeInTheDocument();
+
+    [1, 2, 3, 4, 5, 6].forEach((numGuesses) => {
+      const winsAt = screen.getByLabelText(`number of wins at ${numGuesses} guesses left`);
+      expect(winsAt.textContent).toBe(expectedWinsAtNumGuesses[numGuesses]);
+    });
+  });
+
+
+  test('display correct and incorrect letter guess counts', () => {});
+
+  test('display losses at num guesses', () => {});
   test('display win word cloud', () => {});
   test('display loss word cloud', () => {});
-  test('display wins and losses at num guesses', () => {});
-  test('display correct and incorrect letter guess counts', () => {});
 });
