@@ -5,6 +5,7 @@ export default function CountsAtValuesGraph({
   bottomCountLabel,
 }) {
   const flexBasis = `${100 / (countsAtValues.length + 1)}%`;  // plus 1 for labels
+  const minWidth = '3em';
   const barWidth = '80%';
 
   return (
@@ -19,6 +20,7 @@ export default function CountsAtValuesGraph({
       }}>
         <div style={{
           flexBasis,
+          minWidth,
           textAlign: 'end',
         }}>
           {topCountLabel}
@@ -32,6 +34,7 @@ export default function CountsAtValuesGraph({
             key={`graph--counts-at-values--value-${value}--top-count`}
             style={{
               flexBasis,
+              minWidth,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -54,6 +57,7 @@ export default function CountsAtValuesGraph({
       <div style={{ display: 'flex' }}>
         <div style={{
           flexBasis,
+          minWidth,
           textAlign: 'end',
           borderTop: 'solid 1px darkgreen',
         }}>
@@ -66,6 +70,7 @@ export default function CountsAtValuesGraph({
             key={`graph--counts-at-values--value-${value}`}
             style={{
               flexBasis,
+              minWidth,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -89,6 +94,7 @@ export default function CountsAtValuesGraph({
       }}>
         <div style={{
           flexBasis,
+          minWidth,
           textAlign: 'end',
           borderTop: 'solid 1px darkred',
         }}>
@@ -103,6 +109,7 @@ export default function CountsAtValuesGraph({
             key={`graph--counts-at-values--value-${value}--bottom-count`}
             style={{
               flexBasis,
+              minWidth,
               borderTop: 'solid 1px darkred',
               display: 'flex',
               alignItems: 'center',

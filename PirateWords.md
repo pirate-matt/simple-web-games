@@ -48,6 +48,11 @@ _Can you guess the captain's favorite word before you walk the plank?_
   * [x] reset/clear stats for a game+player
   * [x] reset/clear stats for a player
   * [x] calculate stats for PirateWords
+    * [x] Win percentage
+    * [ ] graph for wins at each num guesses left
+    * [ ] graph for correct & incorrect guesses by letter
+      * [x] POC
+      * [ ] refactor POC to read left to right with screen reader
   * [ ] export local player stats
   * [ ] import local player stats
 * [ ] improve style
