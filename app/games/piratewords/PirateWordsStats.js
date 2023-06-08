@@ -1,11 +1,12 @@
 'use client';
 
-import CountsAtValuesGraph from "./CountsAtValuesGraph";
+import CountsForValues from "@/components/charts/CountsForValuesChart";
 import { getStats, updateStats } from "./PlayerStats";
 
 import GAME_STATICS from './statics';
 
 import styles from './piratewords.module.css';
+import WordCloudChart from "@/components/charts/WordCloudChart";
 
 // ---- UTIL FUNCTIONS ----
 
@@ -132,9 +133,9 @@ function calculateGameStats(stats = {}) {
   const {
     wins = 0,
     losses = 0,
-    winsAtNumGuessesLeft,
-    correctGuessCounts,
-    incorrectGuessCounts,
+    winsAtNumGuessesLeft = {},
+    correctGuessCounts = {},
+    incorrectGuessCounts = {},
   } = stats;
 
   const winPercentage = wins === 0 ? 0 : Math.round((
@@ -162,6 +163,7 @@ export default function PirateWordsStats({ playerName, gameName }) {
   const rawStats = getStats(playerName, gameName);
   const stats = calculateGameStats(rawStats);  // TODO: consider if this is worth only running once
   const {
+    correctWordCounts,
     winPercentage,
     winsAtNumGuesses,
     correctAndIncorrectGuessesAtEachLetter,
@@ -178,21 +180,31 @@ export default function PirateWordsStats({ playerName, gameName }) {
       <br />
 
       <h3>Win counts</h3>
-      <CountsAtValuesGraph
-        topCountLabel="Wins"
+      <CountsForValues
+        orderedCountsAtValues={winsAtNumGuesses}
         valueLabel="Guesses Left"
-        countsAtValues={winsAtNumGuesses}
+        topCountLabel="Wins"
       />
 
       <br />
 
       <h3>Correct & Incorrect Guesses</h3>
-      <CountsAtValuesGraph
-        topCountLabel="correctly guessed"
+      <CountsForValues
+        orderedCountsAtValues={correctAndIncorrectGuessesAtEachLetter}
         valueLabel="letter"
+        topCountLabel="correctly guessed"
         bottomCountLabel="incorrectly guessed"
-        countsAtValues={correctAndIncorrectGuessesAtEachLetter}
       />
+
+      <br />
+
+      <h3>Winning Words Cloud</h3>
+      <WordCloudChart
+        visualizingDescriptor="how frequently a word has been correctly guessed"
+        chartLabel="correct"
+        wordCountsByWord={correctWordCounts}
+      />
+
     </>
   );
 }

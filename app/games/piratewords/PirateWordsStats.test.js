@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 
 import { getStats, setStats } from './PlayerStats';
 import GAME_STATICS from './statics';
@@ -399,7 +399,7 @@ describe('TDD for PirateWords Stats display component', () => {
   test('display stats header with player and game name', () => {
     render(<PirateWordsStats playerName={expectedPlayer} gameName={expectedGame} />);
 
-    const header = screen.getByRole('heading');
+    const header = screen.getByRole('heading', { level: 2 });
     expect(header).toBeInTheDocument();
     expect(header.textContent).toMatch(expectedPlayer);
     expect(header.textContent).toMatch(expectedGame);
@@ -410,7 +410,8 @@ describe('TDD for PirateWords Stats display component', () => {
 
     render(<PirateWordsStats playerName={expectedPlayer} gameName={expectedGame} />);
 
-    const winPercentage = screen.getByLabelText(/wins/i);
+    const winHeading = screen.getByRole('heading', { level: 3, name: /wins/i });
+    const winPercentage = within(winHeading).getByLabelText(/wins/i);
     expect(winPercentage.textContent).toBe(expectedWinPercentage);
   });
 
@@ -419,28 +420,46 @@ describe('TDD for PirateWords Stats display component', () => {
 
     render(<PirateWordsStats playerName={noStatsPlayer} gameName={expectedGame} />);
 
-    const winPercentage = screen.getByLabelText(/wins/i);
+    const winHeading = screen.getByRole('heading', { level: 3, name: /wins/i });
+    const winPercentage = within(winHeading).getByLabelText(/wins/i);
     expect(winPercentage.textContent).toBe(expectedWinPercentage);
   });
 
   test('display wins at num guesses', () => {
-    const expectedWinsAtNumGuesses = { "1": 4, "2": 2, "3": 2, "4": 2, "6": 1, };
-
     render(<PirateWordsStats playerName={noStatsPlayer} gameName={expectedGame} />);
 
-    const graph = screen.getByLabelText('graph showing the count of wins at number of guesses left across all wins');
-    expect(graph).toBeInTheDocument();
+    const header = screen.getByRole('heading', { level: 3, name: /win counts/i });
+    expect(header).toBeInTheDocument();
 
-    [1, 2, 3, 4, 5, 6].forEach((numGuesses) => {
-      const winsAt = screen.getByLabelText(`number of wins at ${numGuesses} guesses left`);
-      expect(winsAt.textContent).toBe(expectedWinsAtNumGuesses[numGuesses]);
-    });
+    const chart = screen.getByLabelText(`chart visualizing a count of "wins" with a column on top of each "guesses left"`);
+    expect(chart).toBeInTheDocument();
   });
 
 
-  test('display correct and incorrect letter guess counts', () => {});
+  test('display correct and incorrect letter guess counts', () => {
+    render(<PirateWordsStats playerName={noStatsPlayer} gameName={expectedGame} />);
 
-  test('display losses at num guesses', () => {});
-  test('display win word cloud', () => {});
-  test('display loss word cloud', () => {});
+    const header = screen.getByRole('heading', { level: 3, name: /correct & incorrect guesses/i });
+    expect(header).toBeInTheDocument();
+
+    const chart = screen.getByLabelText(
+      `chart visualizing both`
+      + ` a count of "correctly guessed" with a column on the top of each "letter",`
+      + ` and a count of "incorrectly guessed" with a column on the bottom of each "letter"`
+    );
+    expect(chart).toBeInTheDocument();
+  });
+
+  test('display wins word cloud', () => {
+    render(<PirateWordsStats playerName={noStatsPlayer} gameName={expectedGame} />);
+
+    const header = screen.getByRole('heading', { level: 3, name: /Wining Words Cloud/i });
+    expect(header).toBeInTheDocument();
+
+    const chart = screen.getByLabelText(
+      `chart visualizing how frequently a word has been "correctly guessed"`
+      + ` by increasing the size of the word in proportion to it's "correct" count`
+    );
+    expect(chart).toBeInTheDocument();
+  });
 });

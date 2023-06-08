@@ -48,7 +48,7 @@ function Count({ type, ariaLabel, value, label, count, countLabel, countCeiling,
   return (
     <div
       className={styles[`chart--counts-for-values--${type}-count`]}
-      aria-label={ariaLabel}
+      aria-label={ariaLabel.toLowerCase()}
     >
       {label && (
         <div className={styles[`chart--counts-for-values--${type}-count--label`]}>
@@ -137,24 +137,24 @@ export default function CountsForValues({
   return (
     <div
       className={gridContainerStyles}
-      aria-label={chartLabel}
+      aria-label={chartLabel.toLowerCase()}
     >
       <TopCount
         label={topCountLabel}
         ariaLabel={
           `top count label "${topCountLabel}";`
-          + `a top count column will cover 100% of the possible area with a count of ${highestCount}`
+          + `a top count column will cover 100% of the possible area with a count of ${highestCount}`.toLowerCase()
         }
       />
       <Value
         label={valueLabel}
-        ariaLabel={`value label "${valueLabel}"`}
+        ariaLabel={`value label "${valueLabel}"`.toLowerCase()}
       />
       <BottomCount
         label={bottomCountLabel}
         ariaLabel={
           `bottom count label "${bottomCountLabel}";`
-          + `a bottom count column will cover 100% of the possible area with a count of ${highestCount}`
+          + `a bottom count column will cover 100% of the possible area with a count of ${highestCount}`.toLowerCase()
         }
       />
       {orderedCountsAtValues.map(({
