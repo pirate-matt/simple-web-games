@@ -25,21 +25,23 @@
 
 .chart--counts-for-values--value {
   font-weight: bold;
-  text-align: center;
 }
 
+.chart--counts-for-values--value,
 .chart--counts-for-values--top-count,
 .chart--counts-for-values--bottom-count {
+  text-align: center;
   display: flex;
   justify-content: center;
-  text-align: center;
 }
+.chart--counts-for-values--value--full-bar,
 .chart--counts-for-values--top-count--full-bar,
 .chart--counts-for-values--bottom-count--full-bar {
   height: 100%;
   width: var(--bar-width);
   background: whitesmoke;
   display: flex;
+  justify-content: center;
 }
 .chart--counts-for-values--top-count--full-bar {
   align-items: end;

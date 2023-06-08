@@ -3,6 +3,9 @@ import { render, screen } from '@testing-library/react';
 import CountsForValuesChart from './CountsForValuesChart';
 
 describe('TDD for CountsForValues Chart', () => {
+
+  // -- Expected Values --
+
   const expectedTopOnly = {
     expectedOrderedCountsAtValues: [
       { value: 6, topCount: 1, },
@@ -65,43 +68,116 @@ describe('TDD for CountsForValues Chart', () => {
     expectedBottomCountLabel: 'incorrectly guessed',
   };
 
+  // -- Top/Bottom/Both Render Tests --
 
+  test('renders single chart: top only with accessible chart label and individual row labels', () => {
+    const {
+      expectedOrderedCountsAtValues,
+      expectedValueLabel,
+      expectedTopCountLabel,
+    } = expectedTopOnly;
 
-  test('renders single chart: top only', () => {
-    // const {
-    //   expectedOrderedCountsAtValues,
-    //   expectedValueLabel,
-    //   expectedTopCountLabel,
-    // } = expectedTopOnly;
+    const expectedMaxCount = Math.max(
+      ...expectedOrderedCountsAtValues.reduce(
+        (allCounts, { topCount, bottomCount }) => allCounts.concat([topCount, bottomCount]),
+        [],
+      ).filter(Number)
+    );
 
-    // render(
-    //   <CountsForValuesChart
-    //     orderedCountsAtValues={expectedOrderedCountsAtValues}
-    //     valueLabel={expectedValueLabel}
-    //     topCountLabel={expectedTopCountLabel}
-    //   />
-    // );
+    render(
+      <CountsForValuesChart
+        orderedCountsAtValues={expectedOrderedCountsAtValues}
+        valueLabel={expectedValueLabel}
+        topCountLabel={expectedTopCountLabel}
+      />
+    );
 
-    // const valueLabel = screen.getByText(new RegExp(expectedValueLabel, 'i'));
-    // expect(valueLabel).toBeInTheDocument();
+    const chart = screen.getByLabelText(
+      `chart visualizing`
+      + ` a count of "${expectedTopCountLabel}" with a column on top of each "${expectedValueLabel}"`
+    );
+    expect(chart).toBeInTheDocument();
 
-    // const topCountLabel = screen.getByText(new RegExp(expectedValueLabel, 'i'));
-    // expect(topCountLabel).toBeInTheDocument();
+    const topLabel = screen.getByLabelText(
+      `top count label "${expectedTopCountLabel}";`
+        + `a top count column will cover 100% of the possible area with a count of ${expectedMaxCount}`
+    );
+    expect(topLabel).toBeInTheDocument();
 
-    // TODO: don't find bottom counts
+    const valueLabel = screen.getByLabelText(`value label "${expectedValueLabel}"`);
+    expect(valueLabel).toBeInTheDocument();
+
+    const expectedValues = expectedOrderedCountsAtValues.map(({ value }) => value);
+    expectedValues.forEach((expectedValue) => {
+      const valueColumn = screen.getByLabelText(
+      `label for specific value of "${expectedValue}"`
+        + ` top count of "${expectedTopCountLabel}" available in the previous element`
+      );
+      expect(valueColumn).toBeInTheDocument();
+    });
   });
 
-  test('renders single chart: bottom only', () => {
+  test('renders single chart: bottom only with accessible chart label and individual row labels', () => {
+    const {
+      expectedOrderedCountsAtValues,
+      expectedValueLabel,
+      expectedBottomCountLabel,
+    } = expectedBottomOnly;
 
+    const expectedMaxCount = Math.max(
+      ...expectedOrderedCountsAtValues.reduce(
+        (allCounts, { topCount, bottomCount }) => allCounts.concat([topCount, bottomCount]),
+        [],
+      ).filter(Number)
+    );
+
+    render(
+      <CountsForValuesChart
+        orderedCountsAtValues={expectedOrderedCountsAtValues}
+        valueLabel={expectedValueLabel}
+        bottomCountLabel={expectedBottomCountLabel}
+      />
+    );
+
+    const chart = screen.getByLabelText(
+      `chart visualizing`
+      + ` a count of "${expectedBottomCountLabel}" with a column on the bottom of each "${expectedValueLabel}"`
+    );
+    expect(chart).toBeInTheDocument();
+
+    const valueLabel = screen.getByLabelText(`value label "${expectedValueLabel}"`);
+    expect(valueLabel).toBeInTheDocument();
+
+    const bottomLabel = screen.getByLabelText(
+      `bottom count label "${expectedBottomCountLabel}";`
+        + `a bottom count column will cover 100% of the possible area with a count of ${expectedMaxCount}`
+    );
+    expect(bottomLabel).toBeInTheDocument();
+
+    const expectedValues = expectedOrderedCountsAtValues.map(({ value }) => value);
+    expectedValues.forEach((expectedValue) => {
+      const valueColumn = screen.getByLabelText(
+      `label for specific value of "${expectedValue}"`
+        + ` bottom count of "${expectedBottomCountLabel}" available in the following element`
+      );
+      expect(valueColumn).toBeInTheDocument();
+    });
   });
 
-  test('renders top and bottom charts', () => {
+  test('renders top and bottom charts with accessible chart label and individual row labels', () => {
     const {
       expectedOrderedCountsAtValues,
       expectedValueLabel,
       expectedTopCountLabel,
       expectedBottomCountLabel,
     } = expectedTopAndBottom;
+
+    const expectedMaxCount = Math.max(
+      ...expectedOrderedCountsAtValues.reduce(
+        (allCounts, { topCount, bottomCount }) => allCounts.concat([topCount, bottomCount]),
+        [],
+      ).filter(Number)
+    );
 
     render(
       <CountsForValuesChart
@@ -112,27 +188,132 @@ describe('TDD for CountsForValues Chart', () => {
       />
     );
 
-    const valueLabel = screen.getByText(new RegExp(expectedValueLabel, 'i'));
+    const chart = screen.getByLabelText(
+      `chart visualizing both`
+      + ` a count of "${expectedTopCountLabel}" with a column on the top of each "${expectedValueLabel}",`
+      + ` and a count of "${expectedBottomCountLabel}" with a column on the bottom of each "${expectedValueLabel}"`
+    );
+    expect(chart).toBeInTheDocument();
+
+    const topLabel = screen.getByLabelText(
+      `top count label "${expectedTopCountLabel}";`
+        + `a top count column will cover 100% of the possible area with a count of ${expectedMaxCount}`
+    );
+    expect(topLabel).toBeInTheDocument();
+
+    const valueLabel = screen.getByLabelText(`value label "${expectedValueLabel}"`);
     expect(valueLabel).toBeInTheDocument();
 
-    const topCountLabel = screen.getByText(new RegExp(expectedTopCountLabel, 'i'));
-    expect(topCountLabel).toBeInTheDocument();
+    const bottomLabel = screen.getByLabelText(
+      `bottom count label "${expectedBottomCountLabel}";`
+        + `a bottom count column will cover 100% of the possible area with a count of ${expectedMaxCount}`
+    );
+    expect(bottomLabel).toBeInTheDocument();
 
-    const bottomCountLabel = screen.getByText(new RegExp(expectedBottomCountLabel, 'i'));
-    expect(bottomCountLabel).toBeInTheDocument();
+    const expectedValues = expectedOrderedCountsAtValues.map(({ value }) => value);
+    expectedValues.forEach((expectedValue) => {
+      const valueColumn = screen.getByLabelText(
+      `label for specific value of "${expectedValue}"`
+        + ` top count of "${expectedTopCountLabel}" available in the previous element`
+        + ` and a bottom count of "${expectedBottomCountLabel}" available in the following element`
+      );
+      expect(valueColumn).toBeInTheDocument();
+    });
   });
 
-  test('bars are read top-down, left-to-right by screen readers', () => {});
-  test('accessibility label includes information about bar scale, layout (top, bottom, both charts), etc.', () => {});
-  test(`each bar has accessibility information:
-    * value the count is for,
-    * what the top bar reads (count & percentage),
-    * what the bottom bar reads (count & percentage),
-    * etc.`, () => {});
+  test(
+    `html structure is top count, then value, then bottom count (repeating) for best screen reader experience;
+    each count element has accessibility information:
+      * top or bottom count
+      * value the count is for
+      * size of the count and what the count is
+      * how much (percentage) that count takes of available space`,
+    () => {
+      const {
+        expectedOrderedCountsAtValues,
+        expectedValueLabel,
+        expectedTopCountLabel,
+        expectedBottomCountLabel,
+      } = {
+        expectedOrderedCountsAtValues: [
+          { value: 'first',     topCount: 8, bottomCount: 4, },
+          { value: 'undefined',                              },
+          { value: 'zeros',     topCount: 0, bottomCount: 0, },
+        ],
+        expectedValueLabel: 'test values',
+        expectedTopCountLabel: 'top counts',
+        expectedBottomCountLabel: 'bottom counts',
+      };
 
-  test('asdf', () => {});
-  test('asdf', () => {});
-  test('asdf', () => {});
-  test('asdf', () => {});
+      render(
+        <CountsForValuesChart
+          orderedCountsAtValues={expectedOrderedCountsAtValues}
+          valueLabel={expectedValueLabel}
+          topCountLabel={expectedTopCountLabel}
+          bottomCountLabel={expectedBottomCountLabel}
+        />
+      );
 
+      const chart = screen.getByLabelText(/chart visualizing both/i);
+      expect(chart).toBeInTheDocument();
+
+      const directDescendantDivs = chart.querySelectorAll(':scope > div');
+
+      const [
+        topLabelDiv, valueLabelDiv, bottomLabelDiv,
+        firstTopCountDiv, firstValueDiv, firstBottomCountDiv,
+        undefinedTopCountDiv, undefinedValueDiv, undefinedBottomCountDiv,
+        zerosTopCountDiv, zerosValueDiv, zerosBottomCountDiv,
+      ] = directDescendantDivs;
+
+      expect(topLabelDiv.textContent).toMatch(new RegExp(expectedTopCountLabel, 'i'));
+      expect(valueLabelDiv.textContent).toMatch(new RegExp(expectedValueLabel, 'i'));
+      expect(bottomLabelDiv.textContent).toMatch(new RegExp(expectedBottomCountLabel, 'i'));
+
+      // First Columns, value = "first"
+      const firstTopCountLabel = firstTopCountDiv.getAttribute('aria-label');
+      expect(firstTopCountLabel).toMatch(/top count/i);
+      expect(firstTopCountLabel).toMatch(/for value "first"/i);
+      expect(firstTopCountLabel).toMatch(/8 "top counts"/i);
+      expect(firstTopCountLabel).toMatch(/100%/i);
+
+      expect(firstValueDiv).toBeInTheDocument(); // value element labels content are checked in preceding tests
+
+      const firstBottomCountLabel = firstBottomCountDiv.getAttribute('aria-label');
+      expect(firstBottomCountLabel).toMatch(/bottom count/i);
+      expect(firstBottomCountLabel).toMatch(/for value "first"/i);
+      expect(firstBottomCountLabel).toMatch(/4 "bottom counts"/i);
+      expect(firstBottomCountLabel).toMatch(/50%/i);
+
+      // Second Columns, value = "undefined"
+      const undefinedTopCountLabel = undefinedTopCountDiv.getAttribute('aria-label');
+      expect(undefinedTopCountLabel).toMatch(/top count/i);
+      expect(undefinedTopCountLabel).toMatch(/for value "undefined"/i);
+      expect(undefinedTopCountLabel).toMatch(/0 "top counts"/i);
+      expect(undefinedTopCountLabel).toMatch(/0%/i);
+
+      expect(undefinedValueDiv).toBeInTheDocument(); // value element labels content are checked in preceding tests
+
+      const undefinedBottomCountLabel = undefinedBottomCountDiv.getAttribute('aria-label');
+      expect(undefinedBottomCountLabel).toMatch(/bottom count/i);
+      expect(undefinedBottomCountLabel).toMatch(/for value "undefined"/i);
+      expect(undefinedBottomCountLabel).toMatch(/0 "bottom counts"/i);
+      expect(undefinedBottomCountLabel).toMatch(/0%/i);
+
+      // Third Columns, value = "zeros"
+      const zerosTopCountLabel = zerosTopCountDiv.getAttribute('aria-label');
+      expect(zerosTopCountLabel).toMatch(/top count/i);
+      expect(zerosTopCountLabel).toMatch(/for value "zeros"/i);
+      expect(zerosTopCountLabel).toMatch(/0 "top counts"/i);
+      expect(zerosTopCountLabel).toMatch(/0%/i);
+
+      expect(zerosValueDiv).toBeInTheDocument(); // value element labels content are checked in preceding tests
+
+      const zerosBottomCountLabel = zerosBottomCountDiv.getAttribute('aria-label');
+      expect(zerosBottomCountLabel).toMatch(/bottom count/i);
+      expect(zerosBottomCountLabel).toMatch(/for value "zeros"/i);
+      expect(zerosBottomCountLabel).toMatch(/0 "bottom counts"/i);
+      expect(zerosBottomCountLabel).toMatch(/0%/i);
+    }
+  );
 });
