@@ -1,0 +1,73 @@
+.chart--counts-for-values {
+  display: grid;
+  grid-auto-flow: column;
+  animation: all 1s;
+
+  --bar-width: 90%;
+}
+
+.chart--top-counts-for-values {
+  grid-template-rows: 100px 1fr;
+}
+.chart--bottom-counts-for-values {
+  grid-template-rows: 1fr 100px;
+}
+.chart--top-and-bottom-counts-for-values {
+  grid-template-rows: 100px 1fr 100px;
+}
+
+.chart--counts-for-values--label,
+.chart--counts-for-values--top-count--label,
+.chart--counts-for-values--bottom-count--label {
+  flex-basis: 100%;
+  text-align: right;
+}
+
+.chart--counts-for-values--value {
+  font-weight: bold;
+  text-align: center;
+}
+
+.chart--counts-for-values--top-count,
+.chart--counts-for-values--bottom-count {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+.chart--counts-for-values--top-count--full-bar,
+.chart--counts-for-values--bottom-count--full-bar {
+  height: 100%;
+  width: var(--bar-width);
+  background: whitesmoke;
+  display: flex;
+}
+.chart--counts-for-values--top-count--full-bar {
+  align-items: end;
+}
+.chart--counts-for-values--bottom-count--full-bar {
+  align-items: start;
+}
+.chart--counts-for-values--top-count--bar,
+.chart--counts-for-values--bottom-count--bar {
+  width: 100%;
+}
+
+.chart--counts-for-values--top-count {
+  border-bottom: solid 1px green;
+  align-items: end;
+}
+.chart--counts-for-values--top-count--bar {
+  /* width: var(--bar-width); */
+  background: lightgreen;
+  color: green;
+}
+
+.chart--counts-for-values--bottom-count {
+  border-top: solid 1px darkred;
+  align-items: start;
+}
+.chart--counts-for-values--bottom-count--bar {
+  /* width: var(--bar-width); */
+  background: lightcoral;
+  color: darkred;
+}
