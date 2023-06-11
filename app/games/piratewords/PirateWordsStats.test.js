@@ -428,7 +428,7 @@ describe('TDD for PirateWords Stats display component', () => {
   test('display wins at num guesses', () => {
     render(<PirateWordsStats playerName={noStatsPlayer} gameName={expectedGame} />);
 
-    const header = screen.getByRole('heading', { level: 3, name: /win counts/i });
+    const header = screen.getByRole('heading', { level: 3, name: /how quickly do you win/i });
     expect(header).toBeInTheDocument();
 
     const chart = screen.getByLabelText(`chart visualizing a count of "wins" with a column on top of each "guesses left"`);
@@ -439,26 +439,13 @@ describe('TDD for PirateWords Stats display component', () => {
   test('display correct and incorrect letter guess counts', () => {
     render(<PirateWordsStats playerName={noStatsPlayer} gameName={expectedGame} />);
 
-    const header = screen.getByRole('heading', { level: 3, name: /correct & incorrect guesses/i });
+    const header = screen.getByRole('heading', { level: 3, name: /letter stats/i });
     expect(header).toBeInTheDocument();
 
     const chart = screen.getByLabelText(
       `chart visualizing both`
       + ` a count of "correctly guessed" with a column on the top of each "letter",`
       + ` and a count of "incorrectly guessed" with a column on the bottom of each "letter"`
-    );
-    expect(chart).toBeInTheDocument();
-  });
-
-  test('display wins word cloud', () => {
-    render(<PirateWordsStats playerName={noStatsPlayer} gameName={expectedGame} />);
-
-    const header = screen.getByRole('heading', { level: 3, name: /Wining Words Cloud/i });
-    expect(header).toBeInTheDocument();
-
-    const chart = screen.getByLabelText(
-      `chart visualizing how frequently a word has been "correctly guessed"`
-      + ` by increasing the size of the word in proportion to it's "correct" count`
     );
     expect(chart).toBeInTheDocument();
   });

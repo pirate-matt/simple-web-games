@@ -6,7 +6,6 @@ import { getStats, updateStats } from "./PlayerStats";
 import GAME_STATICS from './statics';
 
 import styles from './piratewords.module.css';
-import WordCloudChart from "@/components/charts/WordCloudChart";
 
 // ---- UTIL FUNCTIONS ----
 
@@ -173,13 +172,13 @@ export default function PirateWordsStats({ playerName, gameName }) {
     <>
       <h2>{`${playerName}'s ${gameName} Stats`}</h2>
       <h3>
-        <label htmlFor="win-percentage">Wins </label>
         <output id="win-percentage">{`${winPercentage}%`}</output>
+        <label htmlFor="win-percentage"> Wins</label>
       </h3>
 
       <br />
 
-      <h3>Win counts</h3>
+      <h3>How quickly do you win?</h3>
       <CountsForValues
         orderedCountsAtValues={winsAtNumGuesses}
         valueLabel="Guesses Left"
@@ -188,21 +187,12 @@ export default function PirateWordsStats({ playerName, gameName }) {
 
       <br />
 
-      <h3>Correct & Incorrect Guesses</h3>
+      <h3>Letter Stats</h3>
       <CountsForValues
         orderedCountsAtValues={correctAndIncorrectGuessesAtEachLetter}
         valueLabel="letter"
         topCountLabel="correctly guessed"
         bottomCountLabel="incorrectly guessed"
-      />
-
-      <br />
-
-      <h3>Winning Words Cloud</h3>
-      <WordCloudChart
-        visualizingDescriptor="how frequently a word has been correctly guessed"
-        chartLabel="correct"
-        wordCountsByWord={correctWordCounts}
       />
 
     </>

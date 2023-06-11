@@ -38,11 +38,17 @@ function BottomCount({ ...args }) {
 function Count({ type, ariaLabel, value, label, count, countLabel, countCeiling, }) {
   if (label === undefined && count === undefined) return;
 
-  const heightPercentage = `${(count / countCeiling) * 100}%`;
+  const heightPercentageNum = (count / countCeiling) * 100;
+  const heightPercentage = `${heightPercentageNum}%`;
+  const roundedHeightPercentage = `${
+    heightPercentageNum % 1 === 0
+    ? heightPercentageNum
+    : heightPercentageNum.toFixed(1)
+  }%`;
 
   // if no aria label is provided, use the one that includes the calculated height percentage
   if(ariaLabel === undefined) {
-    ariaLabel = `${type} count for value "${value}" of ${count} "${countLabel}" covering ${heightPercentage} of available column space`;
+    ariaLabel = `${type} count for value "${value}" of ${count} "${countLabel}" covering ${roundedHeightPercentage} of available column space`;
   }
 
   return (
@@ -63,7 +69,7 @@ function Count({ type, ariaLabel, value, label, count, countLabel, countCeiling,
           >
             {count}
             <br />
-            {heightPercentage}
+            {roundedHeightPercentage}
           </div>
         </div>
       )}

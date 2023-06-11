@@ -18,8 +18,8 @@ _Can you guess the captain's favorite word before you walk the plank?_
 ## TODO:s
 
 * [x] v0.0 can play with hard coded word and win or lose
-* [ ] v0.1 can play with randomized word and win or lose
-* [ ] v0.2 can enter player name and view local scores by name
+* [x] v0.1 can play with randomized word and win or lose
+* [x] v0.2 can enter player name and view local scores by name
 * [ ] v0.3 add pirate themed "story telling" elements to UX
 * [ ] v0.4 add difficulty into game (categories?, word selection, guesses left, etc.)
 * [ ] v1.0 ???
@@ -38,23 +38,16 @@ _Can you guess the captain's favorite word before you walk the plank?_
 * [x] user can guess correct letter
 * [x] user can guess incorrect letter
 * [x] hardcode starting word
-  * [ ] Randomize word from a hard coded list
+  * [x] Randomize word from a hard coded list
+    * [ ] randomize hard coded list(s) every build
 * [x] win check
 * [x] lose check
-* [ ] player stats
-  * [x] set stats for a game+player
-  * [x] retrieve stats for a game+player
-  * [x] update stats for a game+player
-  * [x] reset/clear stats for a game+player
-  * [x] reset/clear stats for a player
-  * [x] calculate stats for PirateWords
-    * [x] Win percentage
-    * [ ] graph for wins at each num guesses left
-    * [ ] graph for correct & incorrect guesses by letter
-      * [x] POC
-      * [ ] refactor POC to read left to right with screen reader
+* [x] player stats
   * [ ] export local player stats
   * [ ] import local player stats
+* [ ] polish CountForValuesChart design
+  * [ ] better rendering of count & percentage labels
+  * [ ] control count & percentage render w/ props
 * [ ] improve style
 * [ ] handle localStorage being full
 

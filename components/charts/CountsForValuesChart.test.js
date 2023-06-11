@@ -316,4 +316,75 @@ describe('TDD for CountsForValues Chart', () => {
       expect(zerosBottomCountLabel).toMatch(/0%/i);
     }
   );
+
+  test('percentages are rounded to one decimal place (if needed)', () => {
+    const {
+      expectedOrderedCountsAtValues,
+      expectedValueLabel,
+      expectedTopCountLabel,
+      expectedBottomCountLabel,
+    } = {
+      expectedOrderedCountsAtValues: [
+        { value: 'no rounding, set scale', topCount: 100,      bottomCount: 100,        },
+        { value: 'needs rounded 1',        topCount: 42.12345, bottomCount: 6.99999999, },
+        { value: 'needs rounded 2',        topCount: 12.00029, bottomCount: 0.00000983, },
+        { value: 'no rounding',            topCount: 64,       bottomCount: 0,          },
+      ],
+      expectedValueLabel: 'test values',
+      expectedTopCountLabel: 'top counts',
+      expectedBottomCountLabel: 'bottom counts',
+    };
+
+    render(
+      <CountsForValuesChart
+        orderedCountsAtValues={expectedOrderedCountsAtValues}
+        valueLabel={expectedValueLabel}
+        topCountLabel={expectedTopCountLabel}
+        bottomCountLabel={expectedBottomCountLabel}
+      />
+    );
+
+    const chart = screen.getByLabelText(/chart visualizing both/i);
+    expect(chart).toBeInTheDocument();
+
+    const directDescendantDivs = chart.querySelectorAll(':scope > div');
+
+    const [
+      topLabelDiv, valueLabelDiv, bottomLabelDiv,
+      firstNoRoundingTopCountDiv, firstNoRoundingValueDiv, firstNoRoundingBottomCountDiv,
+      firstRoundingTopCountDiv, firstRoundingValueDiv, firstRoundingBottomCountDiv,
+      secondRoundingTopCountDiv, secondRoundingValueDiv, secondRoundingBottomCountDiv,
+      secondNoRoundingTopCountDiv, secondNoRoundingValueDiv, secondNoRoundingBottomCountDiv,
+    ] = directDescendantDivs;
+
+    // Expect all label <div>s to be in the document
+    [
+      topLabelDiv, valueLabelDiv, bottomLabelDiv,
+      firstNoRoundingValueDiv, firstRoundingValueDiv,
+      secondRoundingValueDiv, secondNoRoundingValueDiv,
+    ].forEach((labelDiv) => {
+      expect(labelDiv).toBeInTheDocument();
+    });
+
+    const ensureCorrectRoundingString = (div, roundingStr) => {
+      const roundingStrRegExp = new RegExp(roundingStr);
+      const ariaLabel = div.getAttribute('aria-label');
+      expect(ariaLabel).toMatch(roundingStrRegExp);
+      expect(div.textContent).toMatch(roundingStrRegExp);
+    };
+
+    // No rounding
+    ensureCorrectRoundingString(firstNoRoundingTopCountDiv, '100%');
+    ensureCorrectRoundingString(firstNoRoundingBottomCountDiv, '100%');
+
+    ensureCorrectRoundingString(secondNoRoundingTopCountDiv, '64%');
+    ensureCorrectRoundingString(secondNoRoundingBottomCountDiv, '0%');
+
+    // Rounding
+    ensureCorrectRoundingString(firstRoundingTopCountDiv, '42.1%');
+    ensureCorrectRoundingString(firstRoundingBottomCountDiv, '7.0%');
+
+    ensureCorrectRoundingString(secondRoundingTopCountDiv, '12.0%');
+    ensureCorrectRoundingString(secondRoundingBottomCountDiv, '0.0%');
+  });
 });
