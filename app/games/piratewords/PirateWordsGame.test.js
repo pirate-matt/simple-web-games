@@ -77,7 +77,7 @@ describe('TDD for PirateWordsGame', () => {
 
     const progressIndicator = screen.getByRole('status', { name: /guesses left/i });
 
-    expect(progressIndicator.textContent).toBe(expectedNumLettersToGuess.toString());
+    expect(progressIndicator).toHaveTextContent(expectedNumLettersToGuess.toString());
   });
 
   test('Make sure user can see how many letters they need to guess at the start of the game', () => {
@@ -116,8 +116,8 @@ describe('TDD for PirateWordsGame', () => {
 
     await userEvent.click(wButton);
 
-    expect(wButton).toHaveAttribute('disabled'); // cannot guess letter again
-    expect(progressIndicator.textContent).toBe(expectedGuessesLeft.toString());
+    expect(wButton).toBeDisabled(); // cannot guess letter again
+    expect(progressIndicator).toHaveTextContent(expectedGuessesLeft.toString());
   });
 
   test('when user guesses correct letter, letter is disabled and all instances of letter are revealed', async () => {
@@ -133,8 +133,8 @@ describe('TDD for PirateWordsGame', () => {
 
     await userEvent.click(eButton);
 
-    expect(eButton).toHaveAttribute('disabled'); // cannot guess letter again
-    expect(progressIndicator.textContent).toBe(expectedGuessesLeft); // number of guesses left hasn't changed
+    expect(eButton).toBeDisabled(); // cannot guess letter again
+    expect(progressIndicator).toHaveTextContent(expectedGuessesLeft); // number of guesses left hasn't changed
 
     const guessSection = screen.getByRole('status', { name: 'correct letters and blank un-guessed letters' });
     const lettersLeftToGuess = within(guessSection).getAllByLabelText('un-guessed letter');
@@ -191,14 +191,14 @@ describe('TDD for PirateWordsGame', () => {
       wordToFind: 'piratematt',
       correctLettersGuessed: 'rate',
       wrongLettersGuessed: 'uvwxyz',  // Note: can derive num guesses to lost from this length
-    }
+    };
 
     render(<PirateWordsGame renderGameOver endGameData={expectedEndGameData} />);
 
     const lossNotification = screen.getByRole('alert', { name: 'game over: loss' });
     expect(lossNotification).toBeInTheDocument();
 
-    const restartGameBtn = screen.getByRole('link', { name: /restart/i})
+    const restartGameBtn = screen.getByRole('link', { name: /restart/i});
     expect(restartGameBtn).toBeInTheDocument();
   });
 
@@ -245,14 +245,14 @@ describe('TDD for PirateWordsGame', () => {
       wordFound: 'piratematt',
       wrongLettersGuessed: 'xz',
       guessesLeft: 6 - 'xz'.length, // Note: 6 is currently a hardcoded limit... will likely make this smarter in the future
-    }
+    };
 
     render(<PirateWordsGame renderGameOver endGameData={expectedEndGameData} />);
 
     const lossNotification = screen.getByRole('alert', { name: 'game over: win' });
     expect(lossNotification).toBeInTheDocument();
 
-    const restartGameBtn = screen.getByRole('link', { name: /continue .* with another game/i})
+    const restartGameBtn = screen.getByRole('link', { name: /continue .* with another game/i});
     expect(restartGameBtn).toBeInTheDocument();
   });
 
@@ -278,7 +278,7 @@ describe('TDD for PirateWordsGame', () => {
       const expectedWord = 'hello';
       const lettersToWin = 'hello';
 
-      render(<PirateWordsGame startingWord={expectedWord} />)
+      render(<PirateWordsGame startingWord={expectedWord} />);
 
       await Promise.all(Array.from(lettersToWin).map((letter) => {
         const buttonForLetter = screen.getByRole('button', { name: new RegExp(letter, 'i') });
@@ -292,7 +292,7 @@ describe('TDD for PirateWordsGame', () => {
       const expectedWord = 'hello';
       const lettersToLose = 'abcdefg';
 
-      render(<PirateWordsGame startingWord={expectedWord} />)
+      render(<PirateWordsGame startingWord={expectedWord} />);
 
       await Promise.all(Array.from(lettersToLose).map((letter) => {
         const buttonForLetter = screen.getByRole('button', { name: new RegExp(letter, 'i') });
@@ -328,7 +328,7 @@ describe('TDD for PirateWordsGame', () => {
       const expectedWord = 'hello';
       const lettersToLose = 'abcdefg';
 
-      render(<PirateWordsGame playerName={expectedPlayer} startingWord={expectedWord} handleGameEnd={endGameSpy} />)
+      render(<PirateWordsGame playerName={expectedPlayer} startingWord={expectedWord} handleGameEnd={endGameSpy} />);
 
       await Promise.all(Array.from(lettersToLose).map((letter) => {
         const buttonForLetter = screen.getByRole('button', { name: new RegExp(letter, 'i') });

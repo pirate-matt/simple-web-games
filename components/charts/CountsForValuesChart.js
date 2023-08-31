@@ -17,7 +17,7 @@ function Value({ ariaLabel, label, value }) {
         </div>
       )}
       {value !== undefined && (
-        <div className={styles[`chart--counts-for-values--value--full-bar`]}>
+        <div className={styles['chart--counts-for-values--value--full-bar']}>
           <div className={styles['chart--counts-for-values--value']}>
             {value}
           </div>
@@ -35,7 +35,7 @@ function BottomCount({ ...args }) {
   return (<Count {...args} type="bottom" />);
 }
 
-function Count({ type, ariaLabel, value, label, count, countLabel, countCeiling, }) {
+function Count({ type, ariaLabel, value, label, count, countLabel, countCeiling }) {
   if (label === undefined && count === undefined) return;
 
   const heightPercentageNum = (count / countCeiling) * 100;
@@ -65,7 +65,7 @@ function Count({ type, ariaLabel, value, label, count, countLabel, countCeiling,
         <div className={styles[`chart--counts-for-values--${type}-count--full-bar`]}>
           <div
             className={styles[`chart--counts-for-values--${type}-count--bar`]}
-            style={{ height: heightPercentage, }}
+            style={{ height: heightPercentage }}
           >
             {count}
             <br />
@@ -106,16 +106,16 @@ export default function CountsForValues({
   let chartLabel = '';
 
   if (isTopAndBottom) {
-    chartLabel = `chart visualizing both`
+    chartLabel = 'chart visualizing both'
       + ` a count of "${topCountLabel}" with a column on the top of each "${valueLabel}",`
       + ` and a count of "${bottomCountLabel}" with a column on the bottom of each "${valueLabel}"`;
   }
   else if (isTopOnly) {
-    chartLabel = `chart visualizing`
+    chartLabel = 'chart visualizing'
       + ` a count of "${topCountLabel}" with a column on top of each "${valueLabel}"`;
   }
   else if (isBottomOnly) {
-    chartLabel = `chart visualizing`
+    chartLabel = 'chart visualizing'
       + ` a count of "${bottomCountLabel}" with a column on the bottom of each "${valueLabel}"`;
   }
 
@@ -129,7 +129,7 @@ export default function CountsForValues({
     }
     else if (isTopOnly) {
       valueLabel = `label for specific value of "${value}"`
-        + ` top count of "${topCountLabel}" available in the previous element`
+        + ` top count of "${topCountLabel}" available in the previous element`;
     }
     else if (isBottomOnly) {
       valueLabel = `label for specific value of "${value}"`
@@ -137,7 +137,7 @@ export default function CountsForValues({
     }
 
     return valueLabel;
-  }
+  };
 
   // Render
   return (

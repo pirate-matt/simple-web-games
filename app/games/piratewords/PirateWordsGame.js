@@ -9,7 +9,7 @@ import PirateWordsStats, { addLossToStats, addWinToStats } from './PirateWordsSt
 
 import styles from './piratewords.module.css';
 
-const guessableLetters = `abcdefghijklmnopqrstuvwxyz`.toUpperCase().split('');
+const guessableLetters = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
 
 const calculateStartingGuesses = () => {
   // TODO: make this smarter... maybe word dependent?
@@ -32,7 +32,7 @@ export const calculateStartingWord = (word = '') => {
   }
 
   return word;
-}
+};
 
 const removeCorrectlyGuessedLetters = (guessedLetters, foundLetters) => (
   guessedLetters.split('').filter(char => !foundLetters.includes(char)).join('')
@@ -63,7 +63,7 @@ export default function PirateWordsGame({
     const letters = word.split('');
     setWordToFind(word);
     setLettersToGuess(letters);
-    setNumUniqueLettersToFind((new Set(letters)).size)
+    setNumUniqueLettersToFind((new Set(letters)).size);
 
     const startingGuesses = calculateStartingGuesses();
     setNumGuessesToStart(startingGuesses);
@@ -113,7 +113,7 @@ export default function PirateWordsGame({
 
   const handleRestart = () => {
     // @TODO: build a better restart... I suspect showing stats will naturally replace this
-    window.location.href = "/games/piratewords";
+    window.location.href = '/games/piratewords';
   };
 
   if (!renderGameOver) return (
@@ -151,7 +151,7 @@ export default function PirateWordsGame({
               className={styles['letter-to-guess']}
             >
             </div>
-          )
+          );
         })}
       </div>
       <div
@@ -185,7 +185,7 @@ export default function PirateWordsGame({
           Congratulations!
         </h2>
         <p>
-          {`You correctly guessed the Captain's favorite word, `}<em>{wordToFind.toLowerCase()}</em>, with {numGuessesLeft} guess{numGuessesLeft > 1 ? 'es' : ''} to spare!
+          {'You correctly guessed the Captain\'s favorite word, '}<em>{wordToFind.toLowerCase()}</em>, with {numGuessesLeft} guess{numGuessesLeft > 1 ? 'es' : ''} to spare!
         </p>
         <p>
           The crew helps you off the plank, would you like <Link href="/games/piratewords" onClick={handleRestart}>continue your adventure with another game</Link>?

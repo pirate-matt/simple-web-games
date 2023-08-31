@@ -7,7 +7,7 @@ import PlayerStats, {
   getStats,
   nameGameJoinChar,
   setStats,
-  updateStats
+  updateStats,
 } from './PlayerStats';
 
 // ---- UTILS TESTS ----
@@ -152,7 +152,7 @@ describe('TDD for PlayerStats component', () => {
     const FauxGame = () => (<div>Faux Game</div>);
     FauxGame.renderStats = renderStatsSpy;
 
-    render(<PlayerStats playerName={expectedPlayer} Game={FauxGame} />)
+    render(<PlayerStats playerName={expectedPlayer} Game={FauxGame} />);
 
     expect(renderStatsSpy).toHaveBeenCalledWith(expectedPlayer);
   });
@@ -166,7 +166,7 @@ describe('TDD for PlayerStats component', () => {
     render(<PlayerStats playerName="piratematt" Game={FauxGame} />);
 
     const header = screen.getByRole('heading');
-    expect(header.textContent).toMatch(expectedGameTitle);
+    expect(header).toHaveTextContent(new RegExp(expectedGameTitle));
   });
 
   test ('Gracefully handle the absence of Game.title', () => {
@@ -175,9 +175,9 @@ describe('TDD for PlayerStats component', () => {
 
     render(<PlayerStats playerName="piratematt" Game={FauxGame} />);
 
-    expect(screen.queryByText(/undefined/i)).toBe(null);  // ensure no "undefined"s slip into the UI
-    expect(screen.queryByText(FauxGame.name, { exact: false })).toBe(null);  // ensure none of the old pattern has escaped refactoring
+    expect(screen.queryByText(/undefined/i)).not.toBeInTheDocument();  // ensure no "undefined"s slip into the UI
+    expect(screen.queryByText(FauxGame.name, { exact: false })).not.toBeInTheDocument();  // ensure none of the old pattern has escaped refactoring
 
-    expect(screen.getByTestId(PlayerStats.headerId).textContent).toBe(expectedHeaderText)
+    expect(screen.getByTestId(PlayerStats.headerId)).toHaveTextContent(expectedHeaderText);
   });
 });

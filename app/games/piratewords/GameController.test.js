@@ -20,14 +20,14 @@ describe('TDD for SetPlayerName', () => {
     const userTyping = userEvent.type(playerNameInput, illegalPlayerName);
 
     const illegalCharMsg = await screen.findByRole('alert', {
-      name: new RegExp(`cannot use the "${nameGameJoinChar}" character`, 'i')
+      name: new RegExp(`cannot use the "${nameGameJoinChar}" character`, 'i'),
     });
     expect(illegalCharMsg).toBeInTheDocument();
 
     // wait for typing to finish and assert we didn't allow any illegal characters in the final value
     await userTyping;
 
-    expect(playerNameInput.value).toBe(expectedPlayer);
+    expect(playerNameInput).toHaveValue(expectedPlayer);
   });
 
   test('User can use enter key to set player name', async () => {
@@ -79,7 +79,7 @@ describe('TDD for GameController', () => {
 
     // assert we can't play game
     const aGameControlQuery = screen.queryByRole('button', { name: new RegExp(expectedPlayerName[0], 'i')});
-    expect(aGameControlQuery).toBe(null);
+    expect(aGameControlQuery).not.toBeInTheDocument();
 
     // enter player name
     const playerNameInput = screen.getByRole('textbox', { name: /enter player name/i });
@@ -104,7 +104,7 @@ describe('TDD for GameController', () => {
 
     // assert we can't play game
     const aGameControlQuery = screen.queryByRole('button', { name: new RegExp(expectedPlayerName[0], 'i')});
-    expect(aGameControlQuery).toBe(null);
+    expect(aGameControlQuery).not.toBeInTheDocument();
 
     // play without setting player name
     const firstSetPlayerName = screen.getByRole('button', { name: /start your adventure/i });
@@ -150,7 +150,7 @@ describe('TDD for GameController', () => {
   test('User with entered player name can view stats after game end', async () => {
     const expectedPlayerName = 'piratematt';
 
-    render(<GameController Game={FauxGame} />)
+    render(<GameController Game={FauxGame} />);
 
     // enter player name
     const playerNameInput = screen.getByRole('textbox', { name: /enter player name/i });
@@ -172,7 +172,7 @@ describe('TDD for GameController', () => {
   });
 
   test('User without player name cannot view stats after game end', async () => {
-    render(<GameController Game={FauxGame} />)
+    render(<GameController Game={FauxGame} />);
 
     // play without setting player name
     const firstSetPlayerName = screen.getByRole('button', { name: /start your adventure/i });
@@ -187,7 +187,7 @@ describe('TDD for GameController', () => {
 
     // Make sure we cannot see stats, but can the faux game over screen
     const stats = screen.queryByText(/stats/i);  // @FUTURE: implement a better way to find stats
-    expect(stats).toBe(null);
+    expect(stats).not.toBeInTheDocument();
 
     const fauxEndGameMsg = screen.getByTestId(FauxGame.gameOverTextId);
     expect(fauxEndGameMsg).toBeInTheDocument();

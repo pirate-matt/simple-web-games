@@ -16,5 +16,5 @@ export default function HomePage() {
         <Link href="/games/piratewords">Guess words with pirates!</Link>
       </div>
     </main>
-  )
+  );
 }

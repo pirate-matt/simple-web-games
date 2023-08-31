@@ -8,12 +8,12 @@ describe('TDD for CountsForValues Chart', () => {
 
   const expectedTopOnly = {
     expectedOrderedCountsAtValues: [
-      { value: 6, topCount: 1, },
-      { value: 5,              },
-      { value: 4, topCount: 2, },
-      { value: 3, topCount: 2, },
-      { value: 2, topCount: 2, },
-      { value: 1, topCount: 1, },
+      { value: 6, topCount: 1 },
+      { value: 5              },
+      { value: 4, topCount: 2 },
+      { value: 3, topCount: 2 },
+      { value: 2, topCount: 2 },
+      { value: 1, topCount: 1 },
     ],
     expectedTopCountLabel: 'wins',
     expectedValueLabel: 'guesses left',
@@ -21,14 +21,14 @@ describe('TDD for CountsForValues Chart', () => {
 
   const expectedBottomOnly = {
     expectedOrderedCountsAtValues: [
-      { value: 8, bottomCount: 1, },
-      { value: 7,                 },
-      { value: 6, bottomCount: 0, },
-      { value: 5,                 },
-      { value: 4, bottomCount: 5, },
-      { value: 3,                 },
-      { value: 2, bottomCount: 2, },
-      { value: 1, bottomCount: 1, }
+      { value: 8, bottomCount: 1 },
+      { value: 7                 },
+      { value: 6, bottomCount: 0 },
+      { value: 5                 },
+      { value: 4, bottomCount: 5 },
+      { value: 3                 },
+      { value: 2, bottomCount: 2 },
+      { value: 1, bottomCount: 1 },
     ],
     expectedValueLabel: 'letters left',
     expectedBottomCountLabel: 'losses',
@@ -36,32 +36,32 @@ describe('TDD for CountsForValues Chart', () => {
 
   const expectedTopAndBottom = {
     expectedOrderedCountsAtValues: [
-      { value: 'a', topCount: 16, bottomCount: 8, },
-      { value: 'b', topCount: 2,  bottomCount: 3, },
-      { value: 'c', topCount: 2,  bottomCount: 4, },
-      { value: 'd', topCount: 3,  bottomCount: 2, },
-      { value: 'e', topCount: 16, bottomCount: 6, },
-      { value: 'f', topCount: 1,  bottomCount: 3, },
-      { value: 'g', topCount: 2,  bottomCount: 4, },
-      { value: 'h', topCount: 1,  bottomCount: 2, },
-      { value: 'i', topCount: 7,  bottomCount: 10, },
-      { value: 'j',               bottomCount: 1, },
-      { value: 'k', topCount: 0,  bottomCount: 1, },
-      { value: 'l', topCount: 5,  bottomCount: 4, },
-      { value: 'm', topCount: 1,  bottomCount: 6, },
-      { value: 'n', topCount: 8,  bottomCount: 2, },
-      { value: 'o', topCount: 5,  bottomCount: 9, },
-      { value: 'p', topCount: 1,  bottomCount: 3, },
-      { value: 'q',               bottomCount: 1, },
-      { value: 'r', topCount: 10, bottomCount: 10, },
-      { value: 's', topCount: 3,  bottomCount: 14, },
-      { value: 't', topCount: 8,  bottomCount: 12, },
-      { value: 'u', topCount: 5,  bottomCount: 7, },
-      { value: 'v', topCount: 3,  bottomCount: 0, },
-      { value: 'w', topCount: 1,  bottomCount: 2, },
-      { value: 'x',               bottomCount: 1, },
-      { value: 'y',               bottomCount: 1, },
-      { value: 'z', },
+      { value: 'a', topCount: 16, bottomCount: 8 },
+      { value: 'b', topCount: 2,  bottomCount: 3 },
+      { value: 'c', topCount: 2,  bottomCount: 4 },
+      { value: 'd', topCount: 3,  bottomCount: 2 },
+      { value: 'e', topCount: 16, bottomCount: 6 },
+      { value: 'f', topCount: 1,  bottomCount: 3 },
+      { value: 'g', topCount: 2,  bottomCount: 4 },
+      { value: 'h', topCount: 1,  bottomCount: 2 },
+      { value: 'i', topCount: 7,  bottomCount: 10 },
+      { value: 'j',               bottomCount: 1 },
+      { value: 'k', topCount: 0,  bottomCount: 1 },
+      { value: 'l', topCount: 5,  bottomCount: 4 },
+      { value: 'm', topCount: 1,  bottomCount: 6 },
+      { value: 'n', topCount: 8,  bottomCount: 2 },
+      { value: 'o', topCount: 5,  bottomCount: 9 },
+      { value: 'p', topCount: 1,  bottomCount: 3 },
+      { value: 'q',               bottomCount: 1 },
+      { value: 'r', topCount: 10, bottomCount: 10 },
+      { value: 's', topCount: 3,  bottomCount: 14 },
+      { value: 't', topCount: 8,  bottomCount: 12 },
+      { value: 'u', topCount: 5,  bottomCount: 7 },
+      { value: 'v', topCount: 3,  bottomCount: 0 },
+      { value: 'w', topCount: 1,  bottomCount: 2 },
+      { value: 'x',               bottomCount: 1 },
+      { value: 'y',               bottomCount: 1 },
+      { value: 'z' },
     ],
     expectedValueLabel: 'letter',
     expectedTopCountLabel: 'correctly guessed',
@@ -93,7 +93,7 @@ describe('TDD for CountsForValues Chart', () => {
     );
 
     const chart = screen.getByLabelText(
-      `chart visualizing`
+      'chart visualizing'
       + ` a count of "${expectedTopCountLabel}" with a column on top of each "${expectedValueLabel}"`
     );
     expect(chart).toBeInTheDocument();
@@ -140,7 +140,7 @@ describe('TDD for CountsForValues Chart', () => {
     );
 
     const chart = screen.getByLabelText(
-      `chart visualizing`
+      'chart visualizing'
       + ` a count of "${expectedBottomCountLabel}" with a column on the bottom of each "${expectedValueLabel}"`
     );
     expect(chart).toBeInTheDocument();
@@ -189,7 +189,7 @@ describe('TDD for CountsForValues Chart', () => {
     );
 
     const chart = screen.getByLabelText(
-      `chart visualizing both`
+      'chart visualizing both'
       + ` a count of "${expectedTopCountLabel}" with a column on the top of each "${expectedValueLabel}",`
       + ` and a count of "${expectedBottomCountLabel}" with a column on the bottom of each "${expectedValueLabel}"`
     );
@@ -236,9 +236,9 @@ describe('TDD for CountsForValues Chart', () => {
         expectedBottomCountLabel,
       } = {
         expectedOrderedCountsAtValues: [
-          { value: 'first',     topCount: 8, bottomCount: 4, },
-          { value: 'undefined',                              },
-          { value: 'zeros',     topCount: 0, bottomCount: 0, },
+          { value: 'first',     topCount: 8, bottomCount: 4 },
+          { value: 'undefined'                              },
+          { value: 'zeros',     topCount: 0, bottomCount: 0 },
         ],
         expectedValueLabel: 'test values',
         expectedTopCountLabel: 'top counts',
@@ -266,9 +266,9 @@ describe('TDD for CountsForValues Chart', () => {
         zerosTopCountDiv, zerosValueDiv, zerosBottomCountDiv,
       ] = directDescendantDivs;
 
-      expect(topLabelDiv.textContent).toMatch(new RegExp(expectedTopCountLabel, 'i'));
-      expect(valueLabelDiv.textContent).toMatch(new RegExp(expectedValueLabel, 'i'));
-      expect(bottomLabelDiv.textContent).toMatch(new RegExp(expectedBottomCountLabel, 'i'));
+      expect(topLabelDiv).toHaveTextContent(new RegExp(new RegExp(expectedTopCountLabel, 'i')));
+      expect(valueLabelDiv).toHaveTextContent(new RegExp(new RegExp(expectedValueLabel, 'i')));
+      expect(bottomLabelDiv).toHaveTextContent(new RegExp(new RegExp(expectedBottomCountLabel, 'i')));
 
       // First Columns, value = "first"
       const firstTopCountLabel = firstTopCountDiv.getAttribute('aria-label');
@@ -325,10 +325,10 @@ describe('TDD for CountsForValues Chart', () => {
       expectedBottomCountLabel,
     } = {
       expectedOrderedCountsAtValues: [
-        { value: 'no rounding, set scale', topCount: 100,      bottomCount: 100,        },
-        { value: 'needs rounded 1',        topCount: 42.12345, bottomCount: 6.99999999, },
-        { value: 'needs rounded 2',        topCount: 12.00029, bottomCount: 0.00000983, },
-        { value: 'no rounding',            topCount: 64,       bottomCount: 0,          },
+        { value: 'no rounding, set scale', topCount: 100,      bottomCount: 100        },
+        { value: 'needs rounded 1',        topCount: 42.12345, bottomCount: 6.99999999 },
+        { value: 'needs rounded 2',        topCount: 12.00029, bottomCount: 0.00000983 },
+        { value: 'no rounding',            topCount: 64,       bottomCount: 0          },
       ],
       expectedValueLabel: 'test values',
       expectedTopCountLabel: 'top counts',
@@ -370,7 +370,7 @@ describe('TDD for CountsForValues Chart', () => {
       const roundingStrRegExp = new RegExp(roundingStr);
       const ariaLabel = div.getAttribute('aria-label');
       expect(ariaLabel).toMatch(roundingStrRegExp);
-      expect(div.textContent).toMatch(roundingStrRegExp);
+      expect(div).toHaveTextContent(new RegExp(roundingStrRegExp));
     };
 
     // No rounding

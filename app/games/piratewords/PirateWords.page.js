@@ -22,8 +22,8 @@ export default function Page() {
         Take me <Link href="/">Home</Link>!
       </footer>
     </>
-  )
-};
+  );
+}
 
 export {
   metadata,

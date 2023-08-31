@@ -1,7 +1,7 @@
 'use client';
 
-import CountsForValues from "@/components/charts/CountsForValuesChart";
-import { getStats, updateStats } from "./PlayerStats";
+import CountsForValues from '@/components/charts/CountsForValuesChart';
+import { getStats, updateStats } from './PlayerStats';
 
 import GAME_STATICS from './statics';
 
@@ -10,7 +10,7 @@ import styles from './piratewords.module.css';
 // ---- UTIL FUNCTIONS ----
 
 function incrementCountAtKey(countObj, key) {
-  countObj[key] = (countObj[key] || 0) + 1
+  countObj[key] = (countObj[key] || 0) + 1;
   return countObj;
 }
 

@@ -38,7 +38,7 @@ export function SetPlayerName({ handlePlayerName }) {
 
   const handleGoBackAndSetPlayerName = (clickEvent) => {
     setRenderNoPlayerNameWarning(false);
-  }
+  };
 
   if (renderNoPlayerNameWarning) return (
     <>
@@ -109,7 +109,7 @@ export default function GameController({ Game }) {
   const handleGameEnd = (gameEndData) => {
     setPlayingGame(false);
     setEndGameData(gameEndData);
-  }
+  };
 
   if (capturingPlayerName) return (
     <SetPlayerName handlePlayerName={handlePlayerName} />
