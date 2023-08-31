@@ -28,9 +28,17 @@ _Can you guess the captain's favorite word before you walk the plank?_
   * bias random word selection looking at completed and missed words
   * find word api to randomize words every deploy
 
+### Rewrite w/ player name context
+
+* [ ] Set playername on homepage (optional)
+* [ ] If playername not set on homepage, set before game start (skippable)
+* [ ] 
+
+### OLD TODO:s
+
 * [x] enter player name
   * [x] user can press enter to set player name
-  * [ ] user retains player name when playing another game
+  * [ ] user retains player name when playing another game (elevate with context)
 * [ ] progress section
   * [x] exists
   * [ ] uses graphics in addition to numbers

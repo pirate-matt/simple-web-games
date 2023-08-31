@@ -15,13 +15,6 @@ export default function Page() {
   return (
     <>
       <main>
-        <h1>Temp Stats Block</h1>
-        <PirateWordsStats playerName="piratematt" gameName="PirateWords" />
-
-        <br />
-        <hr />
-        <br />
-
         <h1>Pirate Words</h1>
         <GameController Game={PirateWordsGame} />
       </main>
