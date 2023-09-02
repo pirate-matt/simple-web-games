@@ -61,7 +61,7 @@ describe('TDD for utils', () => {
 // -- Test Suite --
 
 describe('TDD for PirateWordsGame', () => {
-  test('if a starting word is not provided, one is still set', () => {
+  test('RandomPirateWordsGame is playable', () => {
     render(<RandomPirateWordsGame />);
 
     assertGameIsPlayable();

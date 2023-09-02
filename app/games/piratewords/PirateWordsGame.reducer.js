@@ -2,15 +2,19 @@ export const actions = {
   guessLetter: 'guessLetter',
 };
 
-export const buildInitialState = (wordToFind) => ({
-  wordToFind,
-  guessableLetters: wordToFind.split(''),
-  lettersToFindSet: new Set(wordToFind.split('')),
-  numGuessesLeft: 6, // @FUTURE: make this dynamic based on difficulty?
-  guessedLettersSet: new Set(),
-  isWin: false,
-  isLoss: false,
-});
+export const buildInitialState = (initialWord) => {
+  const wordToFind = initialWord.toUpperCase();
+
+  return {
+    wordToFind,
+    guessableLetters: wordToFind.split(''),
+    lettersToFindSet: new Set(wordToFind.split('')),
+    numGuessesLeft: 6, // @FUTURE: make this dynamic based on difficulty?
+    guessedLettersSet: new Set(),
+    isWin: false,
+    isLoss: false,
+  };
+};
 
 export const deepCopyState = (state) => ({
   ...state,
@@ -24,11 +28,13 @@ export default function reducer(gameState, { type, letter }) {
     const newGameState = deepCopyState(gameState);
     const { guessedLettersSet, lettersToFindSet } = newGameState;
 
+    const guessedLetter = letter.toUpperCase();
+
     // Record letter guess
-    guessedLettersSet.add(letter);
+    guessedLettersSet.add(guessedLetter);
 
     // If miss take a step on the plank and check for loss
-    if (!lettersToFindSet.has(letter)) {
+    if (!lettersToFindSet.has(guessedLetter)) {
       newGameState.numGuessesLeft -= 1;
 
       if (newGameState.numGuessesLeft === 0) newGameState.isLoss = true;

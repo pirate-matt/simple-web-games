@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useReducer } from 'react';
 
 import GAME_STATICS from './statics';
-import PirateWordsStats, { addLossToStats, addWinToStats } from './PirateWordsStats';
 
 import reducer, { actions, buildInitialState } from './PirateWordsGame.reducer';
 
@@ -13,8 +12,8 @@ import styles from './piratewords.module.css';
 const allLetters = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
 export default function PirateWordsGame({
   word,
-  // handleGameEnd = () => {},
-  // renderGameOver = false,
+  handleWin = () => {},
+  handleLoss = () => {},
 }) {
   const [gameState, dispatchGameAction] = useReducer(reducer, word, buildInitialState);
 
@@ -101,58 +100,68 @@ export default function PirateWordsGame({
     </>
   );
 
-  if (isWin) return (
-    <>
-      <div>
-        <h2
-          role="alert"
-          aria-label="game over: win"
-        >
-          Congratulations!
-        </h2>
-        <p>
-          {'You correctly guessed the Captain\'s favorite word, '}<em>{wordToFind.toLowerCase()}</em>, with {numGuessesLeft} guess{numGuessesLeft > 1 ? 'es' : ''} to spare!
-        </p>
-        <p>
-          The crew helps you off the plank, would you like <Link href="/games/piratewords" onClick={handleRestart}>continue your adventure with another game</Link>?
-        </p>
-        <hr />
-      </div>
-    </>
-  );
+  if (isWin) {
+    handleWin();
 
-  // default assume isLoss === true
-  let missedWordByNumLetters = wordToFind.split('').reduce(
-    (accumulator, letterToFind) => {
-      if (guessedLettersSet.has(letterToFind)) return accumulator - 1;
+    return (
+      <>
+        <div>
+          <h2
+            role="alert"
+            aria-label="game over: win"
+          >
+            Congratulations!
+          </h2>
+          <p>
+            {'You correctly guessed the Captain\'s favorite word, '}<em>{wordToFind.toLowerCase()}</em>, with {numGuessesLeft} guess{numGuessesLeft > 1 ? 'es' : ''} to spare!
+          </p>
+          <p>
+            The crew helps you off the plank, would you like <Link href="/games/piratewords" onClick={handleRestart}>continue your adventure with another game</Link>?
+          </p>
+          <hr />
+        </div>
+      </>
+    );
+  }
 
-      return accumulator;
-    },
-    wordToFind.length,
-  );
+  if (isLoss) {
+    handleLoss();
 
-  return (
-    <>
-      <div>
-        <h2
-          role="alert"
-          aria-label="game over: loss"
-        >
-          Game Over
-        </h2>
-        <p>
-          Uh oh, you ran out of plank to walk 😢.
-        </p>
-        <p>
-          {`You missed the Captain's favorite word by ${missedWordByNumLetters} letters.`}
-        </p>
-        <hr />
-        <p>
-          Would you like to <Link href="/games/piratewords" onClick={handleRestart}>restart your adventure on the high seas</Link>?
-        </p>
-      </div>
-    </>
-  );
+    let missedWordByNumLetters = wordToFind.split('').reduce(
+      (accumulator, letterToFind) => {
+        if (guessedLettersSet.has(letterToFind)) return accumulator - 1;
+
+        return accumulator;
+      },
+      wordToFind.length,
+    );
+
+    return (
+      <>
+        <div>
+          <h2
+            role="alert"
+            aria-label="game over: loss"
+          >
+            Game Over
+          </h2>
+          <p>
+            Uh oh, you ran out of plank to walk 😢.
+          </p>
+          <p>
+            {`You missed the Captain's favorite word by ${missedWordByNumLetters} letters.`}
+          </p>
+          <hr />
+          <p>
+            Would you like to <Link href="/games/piratewords" onClick={handleRestart}>restart your adventure on the high seas</Link>?
+          </p>
+        </div>
+      </>
+    );
+
+  }
+
+  return null; // TODO: Should never reach this? Maybe refactor to <GameWin> and <GameLoss> and default is playing?
 }
 
 // PirateWordsGame.renderStats = (playerName) => (

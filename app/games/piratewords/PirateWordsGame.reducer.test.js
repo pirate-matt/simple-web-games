@@ -15,9 +15,9 @@ describe('TDD for PirateWords Game Reducer', () => {
     const expectedWord = 'hello';
 
     expect(buildInitialState(expectedWord)).toMatchObject({
-      wordToFind: expectedWord,
-      guessableLetters: ['h', 'e', 'l', 'l', 'o'],
-      lettersToFindSet: new Set(['h', 'e', 'l', 'o']),
+      wordToFind: expectedWord.toUpperCase(),
+      guessableLetters: ['H', 'E', 'L', 'L', 'O'],
+      lettersToFindSet: new Set(['H', 'E', 'L', 'O']),
       numGuessesLeft: 6, // @FUTURE: make this dynamic based on difficulty?
       guessedLettersSet: new Set(),
       isWin: false,
@@ -45,7 +45,7 @@ describe('TDD for PirateWords Game Reducer', () => {
     }
   });
 
-  test ('unknown action dispatched to reducer throws error', () => {
+  test('unknown action dispatched to reducer throws error', () => {
     const unexpectedAction = 'takeOverTheWorld';
 
     expect(actions).not.toHaveProperty(unexpectedAction);
@@ -69,14 +69,14 @@ describe('TDD for PirateWords Game Reducer', () => {
     const expectedMiss = 'z';
     const oneMissFromLossState = {
       ...initialState,
-      guessedLettersSet: new Set(['h', 'e', 'l', 'o', 'w', 'o']),
+      guessedLettersSet: new Set(['H', 'E', 'L', 'O', 'W', 'O']),
       numGuessesLeft: 1,
     };
 
     const expectedHit = 'p';
     const oneHitFromWinState = {  // Note: this is only setup to win if you use `expectedHit`
       ...initialState,
-      guessedLettersSet: new Set(['i', 'r', 'a', 't', 'e']),
+      guessedLettersSet: new Set(['I', 'R', 'A', 'T', 'E']),
     };
 
     test('missed guess, no loss', () => {
@@ -88,7 +88,7 @@ describe('TDD for PirateWords Game Reducer', () => {
       expect(newState).toMatchObject({
         ...initialState,
         numGuessesLeft: 5,
-        guessedLettersSet: new Set(expectedMiss),
+        guessedLettersSet: new Set(expectedMiss.toUpperCase()),
       });
     });
 
@@ -101,7 +101,7 @@ describe('TDD for PirateWords Game Reducer', () => {
       expect(newState).toMatchObject({
         ...oneMissFromLossState,
         numGuessesLeft: 0,
-        guessedLettersSet: oneMissFromLossState.guessedLettersSet.add(expectedMiss),
+        guessedLettersSet: oneMissFromLossState.guessedLettersSet.add(expectedMiss.toUpperCase()),
         isLoss: true,
       });
     });
@@ -114,7 +114,7 @@ describe('TDD for PirateWords Game Reducer', () => {
 
       expect(newState).toMatchObject({
         ...initialState,
-        guessedLettersSet: new Set(expectedHit),
+        guessedLettersSet: new Set(expectedHit.toUpperCase()),
       });
     });
 
@@ -127,7 +127,7 @@ describe('TDD for PirateWords Game Reducer', () => {
 
       expect(newState).toMatchObject({
         ...oneHitFromWinState,
-        guessedLettersSet: oneHitFromWinState.guessedLettersSet.add(expectedHit),
+        guessedLettersSet: oneHitFromWinState.guessedLettersSet.add(expectedHit.toUpperCase()),
         isWin: true,
       });
     });
