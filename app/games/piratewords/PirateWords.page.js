@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import PirateWordsGame from './PirateWordsGame';
+import RandomPirateWordsGame from './RandomPirateWordsGame';
 
 import styles from './piratewords.module.css';
 
@@ -13,7 +13,7 @@ export default function Page() {
     <>
       <main>
         <h1>Pirate Words</h1>
-        <PirateWordsGame />
+        <RandomPirateWordsGame />
       </main>
       <footer className={styles.footer}>
         Take me <Link href="/">Home</Link>!

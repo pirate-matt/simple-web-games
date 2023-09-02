@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import GameController, { SetPlayerName } from './GameController';
 import { nameGameJoinChar } from './PlayerStats';
-import PirateWordsGame from './PirateWordsGame';
+import PirateWordsGame from './RandomPirateWordsGame';
 
 // ---- SetPlayerName TESTS ----
 

@@ -1,6 +1,4 @@
-import { getAllByText, render, screen } from '@testing-library/react';
-
-import PirateWordsGame from './PirateWordsGame';
+import { render, screen } from '@testing-library/react';
 
 import PlayerStats, {
   clearStats,

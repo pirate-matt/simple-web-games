@@ -1,114 +1,31 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useReducer } from 'react';
 
-import WORDS from './words';
 import GAME_STATICS from './statics';
 import PirateWordsStats, { addLossToStats, addWinToStats } from './PirateWordsStats';
 
+import reducer, { actions, buildInitialState } from './PirateWordsGame.reducer';
+
 import styles from './piratewords.module.css';
 
-const guessableLetters = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
-
-const calculateStartingGuesses = () => {
-  // TODO: make this smarter... maybe word dependent?
-  return 6;
-};
-
-export const isNotValidWordForGame = (word) => (
-  !word || word.search(/[^a-zA-Z]/) > -1
-);
-
-export const pickRandomWord = () => {
-  return WORDS[
-    Math.floor(Math.random() * WORDS.length)
-  ];
-};
-
-export const calculateStartingWord = (word = '') => {
-  while(isNotValidWordForGame(word)) {
-    word = pickRandomWord();
-  }
-
-  return word;
-};
-
-const removeCorrectlyGuessedLetters = (guessedLetters, foundLetters) => (
-  guessedLetters.split('').filter(char => !foundLetters.includes(char)).join('')
-);
-
+const allLetters = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
 export default function PirateWordsGame({
-  startingWord,
-  playerName,
-  handleGameEnd = () => {},
-  renderGameOver = false,
-  endGameData = {},
+  word,
+  // handleGameEnd = () => {},
+  // renderGameOver = false,
 }) {
-  // const wordToFind = calculateStartingWord(startingWord).toUpperCase();
-  // const lettersToGuess = wordToFind.split('');
-  // const numUniqueLettersToFind = (new Set(lettersToGuess)).size;
-  // const numGuessesToStart = calculateStartingGuesses();
-  const [wordToFind, setWordToFind] = useState('');
-  const [lettersToGuess, setLettersToGuess] = useState([]);
-  const [numUniqueLettersToFind, setNumUniqueLettersToFind] = useState(0);
-  const [numGuessesToStart, setNumGuessesToStart] = useState(0);
-
-  const [guessedLetters, setGuessedLetters] = useState('');
-  const [numGuessesLeft, setNumGuessesLeft] = useState(numGuessesToStart);
-  const [foundLetters, setFoundLetters] = useState('');
-
-  useEffect(() => {
-    const word = calculateStartingWord(startingWord).toUpperCase();
-    const letters = word.split('');
-    setWordToFind(word);
-    setLettersToGuess(letters);
-    setNumUniqueLettersToFind((new Set(letters)).size);
-
-    const startingGuesses = calculateStartingGuesses();
-    setNumGuessesToStart(startingGuesses);
-    setNumGuessesLeft(startingGuesses);
-  }, [startingWord, setWordToFind, setLettersToGuess, setNumUniqueLettersToFind, setNumGuessesToStart, setNumGuessesLeft]);
-
-  useEffect(() => {
-    if (wordToFind === '') return;  // setup hasn't happened yet
-
-    if (numGuessesLeft <= 0) {
-      const lossData = {
-        loss: true,
-        wordToFind,
-        correctLettersGuessed: foundLetters,
-        wrongLettersGuessed: removeCorrectlyGuessedLetters(guessedLetters, foundLetters),
-        numGuesses: numGuessesToStart,
-      };
-      if(playerName && playerName !== '') addLossToStats(playerName, lossData);
-      handleGameEnd(lossData);
-    }
-    else if (foundLetters.length === numUniqueLettersToFind) {
-      const winData = {
-        won: true,
-        wordFound: wordToFind,
-        wrongLettersGuessed: removeCorrectlyGuessedLetters(guessedLetters, foundLetters),
-        numGuessesLeft,
-      };
-      if(playerName && playerName !== '') addWinToStats(playerName, winData);
-      handleGameEnd(winData);
-    }
-  }, [numGuessesLeft, foundLetters, numUniqueLettersToFind, handleGameEnd, guessedLetters, wordToFind, numGuessesToStart, playerName]);
-
+  const [gameState, dispatchGameAction] = useReducer(reducer, word, buildInitialState);
 
   const handleGuess = (clickEvent) => {
     const letterButton = clickEvent.currentTarget;
     const letterGuessed = letterButton.dataset.letter.toUpperCase();
-    setGuessedLetters((curState) => curState + letterGuessed);
 
-    // Note: a useEffect hook checks for win/loss
-    if(wordToFind.includes(letterGuessed)) {
-      setFoundLetters(curState => curState + letterGuessed);
-    }
-    else {
-      setNumGuessesLeft((curVal) => curVal - 1);
-    }
+    dispatchGameAction({
+      type: actions.guessLetter,
+      letter: letterGuessed,
+    });
   };
 
   const handleRestart = () => {
@@ -116,7 +33,16 @@ export default function PirateWordsGame({
     window.location.href = '/games/piratewords';
   };
 
-  if (!renderGameOver) return (
+  const {
+    wordToFind,
+    guessableLetters,
+    numGuessesLeft,
+    guessedLettersSet,
+    isWin,
+    isLoss,
+  } = gameState;
+
+  if (!isWin && !isLoss) return (
     <>
       <div>
         <label id="guesses-left-label" htmlFor="guesses-left">Guesses Left:</label>
@@ -133,8 +59,8 @@ export default function PirateWordsGame({
         aria-label="correct letters and blank un-guessed letters"
         className={styles['letters-to-guess']}
       >
-        {lettersToGuess.map((letterToGuess, index) => {
-          if (foundLetters.includes(letterToGuess)) return (
+        {guessableLetters.map((letterToGuess, index) => {
+          if (guessedLettersSet.has(letterToGuess)) return (
             <div
               key={`letter-to-guess--${index}`}
               aria-label={`found letter: ${letterToGuess.toLowerCase()}`}
@@ -158,24 +84,24 @@ export default function PirateWordsGame({
         aria-label="Guessable Letters"
         className={styles['guessable-letters']}
       >
-        {guessableLetters.map((guessableLetter) => (
+        {allLetters.map((letter) => (
           <button
-            key={`guessable-letter--${guessableLetter}`}
-            data-letter={guessableLetter}
+            key={`guessable-letter--${letter}`}
+            data-letter={letter}
             className={styles['guessable-letter']}
             onClick={handleGuess}
-            {...guessedLetters.includes(guessableLetter.toUpperCase()) ? {
+            {...guessedLettersSet.has(letter.toUpperCase()) ? {
               disabled: true,
             } : undefined}
           >
-            {guessableLetter}
+            {letter}
           </button>
         ))}
       </div>
     </>
   );
 
-  if (endGameData.won === true) return (
+  if (isWin) return (
     <>
       <div>
         <h2
@@ -195,7 +121,16 @@ export default function PirateWordsGame({
     </>
   );
 
-  // default assume endGameData.loss === true
+  // default assume isLoss === true
+  let missedWordByNumLetters = wordToFind.split('').reduce(
+    (accumulator, letterToFind) => {
+      if (guessedLettersSet.has(letterToFind)) return accumulator - 1;
+
+      return accumulator;
+    },
+    wordToFind.length,
+  );
+
   return (
     <>
       <div>
@@ -209,7 +144,7 @@ export default function PirateWordsGame({
           Uh oh, you ran out of plank to walk 😢.
         </p>
         <p>
-          {`You missed the Captain's favorite word by ${wordToFind.length - foundLetters.length} letters.`}
+          {`You missed the Captain's favorite word by ${missedWordByNumLetters} letters.`}
         </p>
         <hr />
         <p>
@@ -220,8 +155,8 @@ export default function PirateWordsGame({
   );
 }
 
-PirateWordsGame.renderStats = (playerName) => (
-  <PirateWordsStats playerName={playerName} gameName={GAME_STATICS.title} />
-);
+// PirateWordsGame.renderStats = (playerName) => (
+//   <PirateWordsStats playerName={playerName} gameName={GAME_STATICS.title} />
+// );
 
 PirateWordsGame.title = GAME_STATICS.title;
