@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { within } from '@testing-library/dom';
 
 import GameController, { SetPlayerName } from './GameController';
 import { nameGameJoinChar } from './PlayerStats';

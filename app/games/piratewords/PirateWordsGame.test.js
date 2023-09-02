@@ -3,12 +3,13 @@ import userEvent from '@testing-library/user-event';
 import { within } from '@testing-library/dom';
 
 import { getStats } from './PlayerStats.js';
-import GAME_STATICS from './statics.js';
 import WORDS from './words.js';
 
 import PirateWordsGame, { calculateStartingWord, isNotValidWordForGame, pickRandomWord } from './PirateWordsGame.js';
 
 const alphabetAsString = 'abcdefghijklmnopqrstuvwxyz';
+
+// ---- UTILS TESTS ----
 
 describe('TDD for utils', () => {
   test('pickRandomWord pull random word from the hardcoded list', () => {
@@ -58,15 +59,30 @@ describe('TDD for utils', () => {
   });
 });
 
+// ---- TESTS FOR GAME ----
+
+// -- Common gets, finds, etc. --
+
+const getGuessSection = () => screen.getByRole('status', {
+  name: 'correct letters and blank un-guessed letters',
+});
+
+// Exporting so other pages can ascertain if this component rendered a playable game
+export const assertGameIsPlayable = () => {
+  const guessSection = getGuessSection();
+  expect(guessSection).toBeInTheDocument();
+
+  const lettersToGuess = within(guessSection).getAllByLabelText('un-guessed letter');
+  expect(lettersToGuess.length).toBeGreaterThan(0);
+};
+
+// -- Test Suite --
+
 describe('TDD for PirateWordsGame', () => {
   test('if a starting word is not provided, one is still set', () => {
     render(<PirateWordsGame />);
 
-    const guessSection = screen.getByRole('status', { name: 'correct letters and blank un-guessed letters' });
-    expect(guessSection).toBeInTheDocument();
-
-    const lettersToGuess = within(guessSection).getAllByLabelText('un-guessed letter');
-    expect(lettersToGuess.length).toBeGreaterThan(0);
+    assertGameIsPlayable();
   });
 
   test('Make sure user can see how many guesses they have left at the start of the game', () => {
@@ -86,7 +102,7 @@ describe('TDD for PirateWordsGame', () => {
 
     render(<PirateWordsGame startingWord={expectedWord} />);
 
-    const guessSection = screen.getByRole('status', { name: 'correct letters and blank un-guessed letters' });
+    const guessSection = getGuessSection();
     expect(guessSection).toBeInTheDocument();
 
     const lettersToGuess = within(guessSection).getAllByLabelText('un-guessed letter');
@@ -136,7 +152,7 @@ describe('TDD for PirateWordsGame', () => {
     expect(eButton).toBeDisabled(); // cannot guess letter again
     expect(progressIndicator).toHaveTextContent(expectedGuessesLeft); // number of guesses left hasn't changed
 
-    const guessSection = screen.getByRole('status', { name: 'correct letters and blank un-guessed letters' });
+    const guessSection = getGuessSection();
     const lettersLeftToGuess = within(guessSection).getAllByLabelText('un-guessed letter');
     const lettersFound = within(guessSection).getAllByLabelText('found letter: e');
 

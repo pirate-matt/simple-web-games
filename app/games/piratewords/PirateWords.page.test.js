@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
+import { assertGameIsPlayable } from './PirateWordsGame.test.js';
+
 import PirateWordsPage from './PirateWords.page.js';
 
 describe('PirateWords Page Tests', () => {
@@ -9,5 +11,11 @@ describe('PirateWords Page Tests', () => {
     const homePageLink = screen.getByText('Home').closest('a');
 
     expect(homePageLink).toHaveAttribute('href', '/');
+  });
+
+  test('Make sure you can play the game', () => {
+    render(<PirateWordsPage />);
+
+    assertGameIsPlayable();
   });
 });

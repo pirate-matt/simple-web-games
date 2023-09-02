@@ -20,9 +20,12 @@ _Can you guess the captain's favorite word before you walk the plank?_
 
 ### Rewrite with useReducer, useContext
 
-* [ ] get game functioning without player name
-  * [ ] remove playername & stats from testing flow
+* [•] get game functioning without player name
+  * [x] remove playername & stats from testing flow
   * [ ] Refactor to useReducer
+    * [x] Reducer created and tested
+    * [•] Implement reducer
+  * [ ] refactor PirateWordsGame to require word, and wrap with RandomPirateWordGame that handles no provided word
 * [ ] add player name with useContext
   * [ ] Set playername on homepage (optional)
   * [ ] If playername not set on homepage, set before game start (skippable)

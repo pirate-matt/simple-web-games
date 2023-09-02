@@ -11,6 +11,7 @@ module.exports = {
     'next',
   ],
   'env': {
+    es6: true,
     'jest': true,
   },
   'globals': {
