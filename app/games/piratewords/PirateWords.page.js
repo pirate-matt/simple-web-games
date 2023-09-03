@@ -12,7 +12,7 @@ export default function Page() {
   return (
     <>
       <main>
-        <h1>Pirate Words</h1>
+        <h1>PirateWords</h1>
         <RandomPirateWordsGame />
       </main>
       <footer className={styles.footer}>

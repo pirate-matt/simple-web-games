@@ -1,7 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-
 import WORDS from './words';
 
 import PirateWordsGame from './PirateWordsGame';

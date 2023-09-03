@@ -1,15 +1,18 @@
 'use client';
 
-import Link from 'next/link';
 import { useReducer } from 'react';
 
 import GAME_STATICS from './statics';
 
 import reducer, { actions, buildInitialState } from './PirateWordsGame.reducer';
 
+import PirateWordsLoss from './PirateWordsLoss';
+import PirateWordsWin from './PirateWordsWin';
+
 import styles from './piratewords.module.css';
 
 const allLetters = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
+
 export default function PirateWordsGame({
   word,
   handleWin = () => {},
@@ -27,11 +30,6 @@ export default function PirateWordsGame({
     });
   };
 
-  const handleRestart = () => {
-    // @TODO: build a better restart... I suspect showing stats will naturally replace this
-    window.location.href = '/games/piratewords';
-  };
-
   const {
     wordToFind,
     guessableLetters,
@@ -41,7 +39,17 @@ export default function PirateWordsGame({
     isLoss,
   } = gameState;
 
-  if (!isWin && !isLoss) return (
+  if (isLoss) {
+    handleLoss();
+    return (<PirateWordsLoss missedWord={wordToFind} guessedLettersSet={guessedLettersSet} />);
+  }
+
+  if (isWin) {
+    handleWin();
+    return (<PirateWordsWin guessedWord={wordToFind} />);
+  }
+
+  return (
     <>
       <div>
         <label id="guesses-left-label" htmlFor="guesses-left">Guesses Left:</label>
@@ -99,73 +107,6 @@ export default function PirateWordsGame({
       </div>
     </>
   );
-
-  if (isWin) {
-    handleWin();
-
-    return (
-      <>
-        <div>
-          <h2
-            role="alert"
-            aria-label="game over: win"
-          >
-            Congratulations!
-          </h2>
-          <p>
-            {'You correctly guessed the Captain\'s favorite word, '}<em>{wordToFind.toLowerCase()}</em>, with {numGuessesLeft} guess{numGuessesLeft > 1 ? 'es' : ''} to spare!
-          </p>
-          <p>
-            The crew helps you off the plank, would you like <Link href="/games/piratewords" onClick={handleRestart}>continue your adventure with another game</Link>?
-          </p>
-          <hr />
-        </div>
-      </>
-    );
-  }
-
-  if (isLoss) {
-    handleLoss();
-
-    let missedWordByNumLetters = wordToFind.split('').reduce(
-      (accumulator, letterToFind) => {
-        if (guessedLettersSet.has(letterToFind)) return accumulator - 1;
-
-        return accumulator;
-      },
-      wordToFind.length,
-    );
-
-    return (
-      <>
-        <div>
-          <h2
-            role="alert"
-            aria-label="game over: loss"
-          >
-            Game Over
-          </h2>
-          <p>
-            Uh oh, you ran out of plank to walk 😢.
-          </p>
-          <p>
-            {`You missed the Captain's favorite word by ${missedWordByNumLetters} letters.`}
-          </p>
-          <hr />
-          <p>
-            Would you like to <Link href="/games/piratewords" onClick={handleRestart}>restart your adventure on the high seas</Link>?
-          </p>
-        </div>
-      </>
-    );
-
-  }
-
-  return null; // TODO: Should never reach this? Maybe refactor to <GameWin> and <GameLoss> and default is playing?
 }
-
-// PirateWordsGame.renderStats = (playerName) => (
-//   <PirateWordsStats playerName={playerName} gameName={GAME_STATICS.title} />
-// );
 
 PirateWordsGame.title = GAME_STATICS.title;

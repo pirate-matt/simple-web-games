@@ -1,8 +1,9 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { within } from '@testing-library/dom';
 
-// import { getStats } from './PlayerStats.js';
+import { assertLossIsRendered } from './PirateWordsLoss.test.js';
+import { assertWinIsRendered } from './PirateWordsWin.test.js';
 
 import PirateWordsGame  from './PirateWordsGame.js';
 
@@ -119,25 +120,7 @@ describe('TDD for PirateWordsGame', () => {
 
     expect(handleWinSpy).toHaveBeenCalled();
 
-    const winNotification = screen.getByRole('alert', { name: 'game over: win' });
-    expect(winNotification).toBeInTheDocument();
-  });
-
-  test('when user wins they are able to try again', async () => {
-    const expectedWord = 'pirate';
-
-    render(<PirateWordsGame word={expectedWord} />);
-
-    await Promise.all(expectedWord.split('').map((letterToGuess) => {
-      const buttonForLetter = screen.getByRole('button', { name: new RegExp(letterToGuess, 'i') });
-      return userEvent.click(buttonForLetter);
-    }));
-
-    const winNotification = screen.getByRole('alert', { name: 'game over: win' });
-    expect(winNotification).toBeInTheDocument();
-
-    const restartGameBtn = screen.getByRole('link', { name: /continue .* with another game/i});
-    expect(restartGameBtn).toBeInTheDocument();
+    assertWinIsRendered();
   });
 
   test('when user loses handleLoss is invoked and loss is rendered', async () => {
@@ -153,20 +136,6 @@ describe('TDD for PirateWordsGame', () => {
 
     expect(handleLossSpy).toHaveBeenCalled();
 
-    const lossNotification = screen.getByRole('alert', { name: 'game over: loss' });
-    expect(lossNotification).toBeInTheDocument();
-  });
-
-  test('when user loses they are able to try again', async () => {
-    render(<PirateWordsGame word="z" />);
-
-    // Note: currently game is hardcoded to allow 6 guesses, if this is made smart, these guesses may need to be updated
-    await Promise.all('abcdef'.split('').map((letterToGuess) => {
-      const buttonForLetter = screen.getByRole('button', { name: new RegExp(letterToGuess, 'i') });
-      return userEvent.click(buttonForLetter);
-    }));
-
-    const restartGameBtn = screen.getByRole('link', { name: /restart/i});
-    expect(restartGameBtn).toBeInTheDocument();
+    assertLossIsRendered();
   });
 });

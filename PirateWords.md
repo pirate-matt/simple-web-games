@@ -26,6 +26,7 @@ _Can you guess the captain's favorite word before you walk the plank?_
     * [x] Reducer created and tested
     * [x] Implement reducer
     * [x] refactor PirateWordsGame to require word, and wrap with RandomPirateWordGame that handles no provided word
+    * [x] refactored game over (win/loss) screens out of the game component
 * [ ] add player name with useContext
   * [ ] Set playername on homepage (optional)
   * [ ] If playername not set on homepage, set before game start (skippable)
