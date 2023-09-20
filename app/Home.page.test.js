@@ -1,8 +1,12 @@
 import { render, screen } from '@testing-library/react';
 
-import HomePage from './Home.page';
+import HomePage, { metadata } from './Home.page';
 
 describe('TDDing Home Page', () => {
+  test('Page title is set as expected', () => {
+    const expectedPageTitle = 'Simple Web Games';
+    expect(metadata.title).toBe(expectedPageTitle);
+  });
 
   test('Can play PirateWords', () => {
     render(<HomePage />);

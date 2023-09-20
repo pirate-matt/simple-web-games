@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 const metadata = {
-  title: 'Play Games',
+  title: 'Simple Web Games',
 };
 
 export {
