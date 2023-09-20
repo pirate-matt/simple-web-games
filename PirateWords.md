@@ -29,10 +29,11 @@ _Can you guess the captain's favorite word before you walk the plank?_
     * [x] refactored game over (win/loss) screens out of the game component
 * [•] v0.1 Pass at styling & context
   * [x] Design favicon
-    * ? Design game specific favicons?
+    * [x] design piratewords specific icon
   * [ ] General styling
-  * [ ] Write first version of game description/introduction
-  * [ ] Design plank walking
+  * [x] Write first version of game description/introduction
+  * [•] Design plank walking
+  * [ ] Add game preview
 * [ ] add player name with useContext
   * [ ] Set playername on homepage (optional)
   * [ ] If playername not set on homepage, set before game start (skippable)
